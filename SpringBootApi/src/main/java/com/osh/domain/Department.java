@@ -7,26 +7,29 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Entity // Указываем Спрингу, что это сущность, а не обычный POJO Bean.
-public class Company {
+public class Department {
     @Id
     @NotNull
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
-    @Column(unique = true)
     @NotNull
     private String name;
+
+    @NotNull
+    private int companyId;
 
     @Column(updatable = false) // Аннотация нужна для того, чтобы поле не обновлялось
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     @NotNull
     private LocalDateTime creationDate;
 
-    public Company() {
+    public Department() {
     }
 
-    public Company(String name) {
+    public Department(String name, int companyId) {
         this.name = name;
+        this.companyId = companyId;
     }
 
     public int getId() {
@@ -53,4 +56,11 @@ public class Company {
         this.creationDate = creationDate;
     }
 
+    public int getCompanyId() {
+        return companyId;
+    }
+
+    public void setCompanyId(int companyId) {
+        this.companyId = companyId;
+    }
 }

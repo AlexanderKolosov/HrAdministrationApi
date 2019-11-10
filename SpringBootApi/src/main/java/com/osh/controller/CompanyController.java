@@ -85,7 +85,7 @@ public class CompanyController {
         Optional<Company> optionalCompany = companyService.getById(id);
 
         Company deletedCompany = optionalCompany.get();
-        companyService.delete(id);
+        companyService.deleteById(id);
 
         return new ResponseEntity<>(
                 companyService.getConfirmationOfDeletionMessage(deletedCompany.getName()),

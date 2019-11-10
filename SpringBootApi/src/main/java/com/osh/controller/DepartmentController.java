@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 
 @RestController // Програмный модуль, который по установленному пути слушает запросы от пользователя и возвращает данные
@@ -32,12 +31,12 @@ public class DepartmentController {
         );
     }
 
-    @GetMapping("/departments/companyId{company_Id}")
+    @GetMapping("/departments/companyId{company_id}")
     @JsonView(Views.UserRoleView.class)
-    public ResponseEntity<?> getListOfDepartmentsByCompany(
-            @PathVariable("company_Id") String company_Id
+    public ResponseEntity<?> getListOfDepartmentsByCompanyId(
+            @PathVariable("company_id") String companyId
     ) {
-        int id = Integer.parseInt(company_Id);
+        int id = Integer.parseInt(companyId);
 
         return new ResponseEntity<>(
                 departmentService.getAllByCompanyIdOrderById(id),
@@ -61,13 +60,13 @@ public class DepartmentController {
         );
     }
 
-    @PostMapping("/departments/companyId{company_Id}")
+    @PostMapping("/departments/companyId{company_id}")
     @JsonView(Views.UserRoleView.class)
-    public ResponseEntity<?> createDepartmentByCompany(
-            @PathVariable("company_Id") String company_Id,
+    public ResponseEntity<?> createDepartmentByCompanyId(
+            @PathVariable("company_id") String companyId,
             @RequestBody Department department
     ) {
-        int id = Integer.parseInt(company_Id);
+        int id = Integer.parseInt(companyId);
         Department newDepartment = new Department(department.getName(), id);
         newDepartment.setCreationDate(LocalDateTime.now());
 
@@ -81,21 +80,21 @@ public class DepartmentController {
 
     @GetMapping("/departments/{department_id}")
     public ResponseEntity<?> getDepartmentById(
-            @PathVariable("department_id") String department_id
+            @PathVariable("department_id") String departmentId
     ) {
 
         return new ResponseEntity<>(
-                departmentService.getById(Integer.parseInt(department_id)),
+                departmentService.getById(Integer.parseInt(departmentId)),
                 HttpStatus.OK
         );
     }
 
     @PutMapping("/departments/{department_id}")
     public ResponseEntity<?> editDepartment(
-            @PathVariable("department_id") String department_id,
+            @PathVariable("department_id") String departmentId,
             @RequestBody Department department)
     {
-        int id = Integer.parseInt(department_id);
+        int id = Integer.parseInt(departmentId);
         Optional<Department> optionalDepartment = departmentService.getById(id);
 
         Department editedDepartment = optionalDepartment.get();
@@ -110,15 +109,15 @@ public class DepartmentController {
     }
 
     @DeleteMapping("/departments/{department_id}")
-    public ResponseEntity<?> completelyDeleteCompany(
-            @PathVariable("department_id") String department_id
+    public ResponseEntity<?> deleteDepartment(
+            @PathVariable("department_id") String departmentId
     ) {
-        int id = Integer.parseInt(department_id);
+        int id = Integer.parseInt(departmentId);
         Optional<Department> optionalDepartment = departmentService.getById(id);
 
         Department deletedDepartment = optionalDepartment.get();
 
-        departmentService.delete(id);
+        departmentService.deleteById(id);
 
         return new ResponseEntity<>(
                 departmentService.getConfirmationOfDeletionMessage(deletedDepartment.getName()),

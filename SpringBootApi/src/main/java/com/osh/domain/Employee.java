@@ -1,57 +1,69 @@
 package com.osh.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonView;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Entity // Указываем Спрингу, что это сущность, а не обычный POJO Bean.
+@Table
 public class Employee {
     @Id
     @NotNull
+    @JsonView(Views.UserRoleView.class)
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
     @NotNull
+    @JsonView(Views.UserRoleView.class)
     private String firstName;
 
     @NotNull
+    @JsonView(Views.UserRoleView.class)
     private String lastName;
 
     @NotNull
     private int age;
 
     @NotNull
+    @Column(unique = true)
     private String passportNumber;
 
     @NotNull
+    @Column(unique = true)
     private String phoneNumber;
 
     @NotNull
     private String address;
 
     @NotNull
+    @JsonView(Views.UserRoleView.class)
     private int companyId;
 
     @NotNull
+    @JsonView(Views.UserRoleView.class)
     private int departmentId;
 
     @NotNull
+    @JsonView(Views.UserRoleView.class)
     private String position;
 
-    @NotNull
+
+    @Column(unique = true)
     private String login;
 
-    @NotNull
-    private String passWord;
+
+    @Column(unique = true)
+    private String password;
 
     @NotNull
     private String role;
 
+    @NotNull
     @Column(updatable = false) // Аннотация нужна для того, чтобы поле не обновлялось
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    @NotNull
     private LocalDateTime creationDate;
 
     public Employee() {
@@ -153,12 +165,12 @@ public class Employee {
         this.login = login;
     }
 
-    public String getPassWord() {
-        return passWord;
+    public String getPassword() {
+        return password;
     }
 
-    public void setPassWord(String passWord) {
-        this.passWord = passWord;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getRole() {

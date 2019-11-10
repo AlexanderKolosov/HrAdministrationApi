@@ -8,6 +8,7 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Entity // Указываем Спрингу, что это сущность, а не обычный POJO Bean.
+@Table
 public class Company {
     @Id
     @NotNull

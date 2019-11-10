@@ -1,12 +1,12 @@
 package com.osh.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import com.osh.domain.Company;
 import com.osh.domain.Department;
 import com.osh.domain.Views;
-import com.osh.repository.DepartmentRepository;
-import org.postgresql.util.PSQLException;
+import com.osh.service.DepartmentServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -15,92 +15,114 @@ import java.util.Optional;
 
 @RestController // Програмный модуль, который по установленному пути слушает запросы от пользователя и возвращает данные
 public class DepartmentController {
+    private final DepartmentServiceImpl departmentService;
+
     @Autowired
-    private DepartmentRepository departmentRepository;
+    public DepartmentController(DepartmentServiceImpl departmentService) {
+        this.departmentService = departmentService;
+    }
 
     @GetMapping("/departments")
     @JsonView(Views.UserRoleView.class)
-    public List<Department> getListOfDepartments( ) {
+    public ResponseEntity<?> getListOfDepartments( ) {
 
-        return departmentRepository.findAllByOrderById();
+        return new ResponseEntity<>(
+                departmentService.getAllByOrderById(),
+                HttpStatus.OK
+        );
     }
 
     @GetMapping("/departments/companyId{company_Id}")
-    public List<Department> getListOfDepartmentsByCompany(
+    @JsonView(Views.UserRoleView.class)
+    public ResponseEntity<?> getListOfDepartmentsByCompany(
             @PathVariable("company_Id") String company_Id
     ) {
         int id = Integer.parseInt(company_Id);
 
-        return departmentRepository.findByCompanyId(id);
+        return new ResponseEntity<>(
+                departmentService.getAllByCompanyIdOrderById(id),
+                HttpStatus.OK
+        );
     }
 
     @PostMapping("/departments")
     @JsonView(Views.UserRoleView.class)
-    public List<Department> createDepartment(
+    public ResponseEntity<?> createDepartment(
             @RequestBody Department department
     ) {
-        Optional<Department> optionalDepartment = departmentRepository.findById(department.getId());
-
         Department newDepartment = new Department(department.getName(), department.getCompanyId());
-
         newDepartment.setCreationDate(LocalDateTime.now());
 
-        departmentRepository.save(newDepartment);
+        departmentService.save(newDepartment);
 
-        return departmentRepository.findAllByOrderById();
+        return new ResponseEntity<>(
+                departmentService.getAllByOrderById(),
+                HttpStatus.CREATED
+        );
     }
 
     @PostMapping("/departments/companyId{company_Id}")
-    public List<Department> createDepartmentByCompany(
+    @JsonView(Views.UserRoleView.class)
+    public ResponseEntity<?> createDepartmentByCompany(
             @PathVariable("company_Id") String company_Id,
             @RequestBody Department department
     ) {
         int id = Integer.parseInt(company_Id);
-
         Department newDepartment = new Department(department.getName(), id);
-
         newDepartment.setCreationDate(LocalDateTime.now());
 
-        departmentRepository.save(newDepartment);
+        departmentService.save(newDepartment);
 
-        return departmentRepository.findByCompanyId(id);
+        return new ResponseEntity<>(
+                departmentService.getAllByCompanyIdOrderById(id),
+                HttpStatus.CREATED
+        );
     }
 
     @GetMapping("/departments/{department_id}")
-    public Optional<Department> getDepartmentById(
+    public ResponseEntity<?> getDepartmentById(
             @PathVariable("department_id") String department_id
     ) {
-        return departmentRepository.findById(Integer.parseInt(department_id));
+
+        return new ResponseEntity<>(
+                departmentService.getById(Integer.parseInt(department_id)),
+                HttpStatus.OK
+        );
     }
 
     @PutMapping("/departments/{department_id}")
-    public Optional<Department> editDepartment(
+    public ResponseEntity<?> editDepartment(
             @PathVariable("department_id") String department_id,
             @RequestBody Department department)
     {
         int id = Integer.parseInt(department_id);
-        Optional<Department> optionalDepartment = departmentRepository.findById(id);
+        Optional<Department> optionalDepartment = departmentService.getById(id);
 
         Department editedDepartment = optionalDepartment.get();
-
         editedDepartment.setName(department.getName());
-        departmentRepository.save(editedDepartment);
 
-        return Optional.of(editedDepartment);
+        departmentService.save(editedDepartment);
+
+        return new ResponseEntity<>(
+                departmentService.getById(id),
+                HttpStatus.OK
+        );
     }
 
     @DeleteMapping("/departments/{department_id}")
-    public String completelyDeleteCompany(
+    public ResponseEntity<?> completelyDeleteCompany(
             @PathVariable("department_id") String department_id
     ) {
         int id = Integer.parseInt(department_id);
-
-        Optional<Department> optionalDepartment = departmentRepository.findById(id);
+        Optional<Department> optionalDepartment = departmentService.getById(id);
 
         Department deletedDepartment = optionalDepartment.get();
 
-        departmentRepository.deleteById(id);
+        departmentService.delete(id);
 
-        return deletedDepartment.getName() + " deleted successfully.";
+        return new ResponseEntity<>(
+                departmentService.getConfirmationOfDeletionMessage(deletedDepartment.getName()),
+                HttpStatus.OK
+        );
     }
 }

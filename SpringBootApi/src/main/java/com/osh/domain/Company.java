@@ -1,6 +1,7 @@
 package com.osh.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonView;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -11,10 +12,12 @@ public class Company {
     @Id
     @NotNull
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @JsonView(Views.UserRoleView.class)
     private int id;
 
     @Column(unique = true)
     @NotNull
+    @JsonView(Views.UserRoleView.class)
     private String name;
 
     @Column(updatable = false) // Аннотация нужна для того, чтобы поле не обновлялось

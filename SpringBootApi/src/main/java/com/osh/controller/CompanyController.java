@@ -1,68 +1,95 @@
 package com.osh.controller;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.osh.domain.Company;
-import com.osh.repository.CompanyRepository;
+import com.osh.domain.Views;
+import com.osh.service.CompanyServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 
 @RestController // Програмный модуль, который по установленному пути слушает запросы от пользователя и возвращает данные
 public class CompanyController {
+    private final CompanyServiceImpl companyService;
+
     @Autowired
-    private CompanyRepository companyRepository;
+    public CompanyController(CompanyServiceImpl companyService) {
+        this.companyService = companyService;
+    }
 
     @GetMapping("/companies")
-    public List<Company> getListOfCompanies( ) {
+    @JsonView(Views.UserRoleView.class)
+    public ResponseEntity<?> getListOfCompanies( ) {
 
-        return companyRepository.findAllByOrderById();
+        return new ResponseEntity<>(
+                companyService.getAllByOrderById(),
+                HttpStatus.OK
+        );
     }
 
     @PostMapping("/companies")
-    public List<Company> createCompany(@RequestBody Company company) {
-       Company newCompany = new Company(company.getName());
-
+    @JsonView(Views.UserRoleView.class)
+    public ResponseEntity<?> createCompany(
+            @RequestBody Company company
+    ) {
+        Company newCompany = new Company(company.getName());
         newCompany.setCreationDate(LocalDateTime.now());
+        companyService.save(newCompany);
 
-        companyRepository.save(newCompany);
-
-        return companyRepository.findAllByOrderById();
+        return new ResponseEntity<>(
+                companyService.getAllByOrderById(),
+                HttpStatus.CREATED
+        );
     }
 
-    @GetMapping("/companies/{id}")
-    public Optional<Company> getCompanyById(@PathVariable String id) {
+    @GetMapping("/companies/{company_id}")
+    public ResponseEntity<?> getCompanyById(
+            @PathVariable("company_id") String companyId
+    ) {
+        int id = Integer.parseInt(companyId);
 
-        return companyRepository.findById(Integer.parseInt(id));
+        return new ResponseEntity<>(
+                companyService.getById(id),
+                HttpStatus.OK
+        );
     }
 
-    @PutMapping("/companies/{id}")
-    public Optional<Company> editCompany(
-            @PathVariable String id,
+    @PutMapping("/companies/{company_id}")
+    public ResponseEntity<?> editCompany(
+            @PathVariable("company_id") String companyId,
             @RequestBody Company company)
     {
-        int intId = Integer.parseInt(id);
-        Optional<Company> optionalCompany = companyRepository.findById(intId);
+        int id = Integer.parseInt(companyId);
+        Optional<Company> optionalCompany = companyService.getById(id);
 
         Company editedCompany = optionalCompany.get();
-
         editedCompany.setName(company.getName());
-        companyRepository.save(editedCompany);
 
-        return Optional.of(editedCompany);
+        companyService.save(editedCompany);
+
+        return new ResponseEntity<>(
+                companyService.getById(id),
+                HttpStatus.OK
+        );
     }
 
-    @DeleteMapping("/companies/{id}")
-    public String completelyDeleteCompany(@PathVariable String id) {
-        int intId = Integer.parseInt(id);
-
-        Optional<Company> optionalCompany = companyRepository.findById(intId);
+    @DeleteMapping("/companies/{company_id}")
+    public ResponseEntity<?> completelyDeleteCompany(
+            @PathVariable("company_id") String companyId
+    ) {
+        int id = Integer.parseInt(companyId);
+        Optional<Company> optionalCompany = companyService.getById(id);
 
         Company deletedCompany = optionalCompany.get();
+        companyService.delete(id);
 
-        companyRepository.deleteById(intId);
-
-        return "Company " + deletedCompany.getName() + " deleted successfully.";
+        return new ResponseEntity<>(
+                companyService.getConfirmationOfDeletionMessage(deletedCompany.getName()),
+                HttpStatus.OK
+        );
     }
 }

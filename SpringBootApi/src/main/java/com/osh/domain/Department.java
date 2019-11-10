@@ -1,22 +1,27 @@
 package com.osh.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonView;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Entity // Указываем Спрингу, что это сущность, а не обычный POJO Bean.
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"name", "companyId"}))
 public class Department {
     @Id
     @NotNull
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @JsonView(Views.UserRoleView.class)
     private int id;
 
     @NotNull
+    @JsonView(Views.UserRoleView.class)
     private String name;
 
     @NotNull
+    @JsonView(Views.UserRoleView.class)
     private int companyId;
 
     @Column(updatable = false) // Аннотация нужна для того, чтобы поле не обновлялось

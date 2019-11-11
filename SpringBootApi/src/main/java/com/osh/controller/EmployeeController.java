@@ -1,7 +1,6 @@
 package com.osh.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import com.osh.domain.Department;
 import com.osh.domain.Employee;
 import com.osh.domain.Views;
 import com.osh.service.EmployeeServiceImpl;

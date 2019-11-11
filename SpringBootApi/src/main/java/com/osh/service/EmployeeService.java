@@ -13,7 +13,7 @@ public interface EmployeeService {
 
     List<Employee> getAllByDepartmentIdOrderById(int departmentId);
 
-    Optional<Employee> getById(int departmentId);
+    Optional<Employee> getById(int employeeId);
 
     String getConfirmationOfDeletionMessage(String employeeFullname);
 

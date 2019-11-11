@@ -21,9 +21,9 @@ public class Company {
     @JsonView(Views.UserRoleView.class)
     private String name;
 
+    @NotNull
     @Column(updatable = false) // Аннотация нужна для того, чтобы поле не обновлялось
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    @NotNull
     private LocalDateTime creationDate;
 
     public Company() {

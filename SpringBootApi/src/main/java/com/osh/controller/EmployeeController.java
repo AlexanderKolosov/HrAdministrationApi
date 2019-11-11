@@ -12,7 +12,8 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-@RestController // Програмный модуль, который по установленному пути слушает запросы от пользователя и возвращает данные
+@RestController
+@RequestMapping("employees")
 public class EmployeeController {
     private final EmployeeServiceImpl employeeService;
 
@@ -21,7 +22,7 @@ public class EmployeeController {
         this.employeeService = employeeService;
     }
 
-    @GetMapping("/employees")
+    @GetMapping
     @JsonView(Views.UserRoleView.class)
     public ResponseEntity<?> getListOfEmployees( ) {
 
@@ -31,7 +32,7 @@ public class EmployeeController {
         );
     }
 
-    @GetMapping("/employees/companyId{company_id}")
+    @GetMapping("/companyId{company_id}")
     @JsonView(Views.UserRoleView.class)
     public ResponseEntity<?> getListOfEmployeesByCompanyId(
             @PathVariable("company_id") String companyId
@@ -44,7 +45,7 @@ public class EmployeeController {
         );
     }
 
-    @GetMapping("/employees/departmentId{department_id}")
+    @GetMapping("/departmentId{department_id}")
     @JsonView(Views.UserRoleView.class)
     public ResponseEntity<?> getListOfEmployeesByDepartmentId(
             @PathVariable("department_id") String departmentId
@@ -57,7 +58,7 @@ public class EmployeeController {
         );
     }
 
-    @PostMapping("/employees")
+    @PostMapping
     @JsonView(Views.UserRoleView.class)
     public ResponseEntity<?> createEmployee(
             @RequestBody Employee employee
@@ -72,9 +73,9 @@ public class EmployeeController {
         newEmployee.setCompanyId(employee.getCompanyId());
         newEmployee.setDepartmentId(employee.getDepartmentId());
         newEmployee.setPosition(employee.getPosition());
-        newEmployee.setLogin(employee.getLogin());
+        newEmployee.setUserName(employee.getUserName());
         newEmployee.setPassword(employee.getPassword());
-        newEmployee.setRole(employee.getRole());
+        newEmployee.setRoles(employee.getRoles());
         newEmployee.setCreationDate(LocalDateTime.now());
 
         employeeService.save(newEmployee);
@@ -85,7 +86,7 @@ public class EmployeeController {
         );
     }
 
-    @PostMapping("/employees/companyId{company_id}")
+    @PostMapping("/companyId{company_id}")
     @JsonView(Views.UserRoleView.class)
     public ResponseEntity<?> createEmployeeByCompanyId(
             @PathVariable("company_id") String companyId,
@@ -102,9 +103,9 @@ public class EmployeeController {
         newEmployee.setCompanyId(id);
         newEmployee.setDepartmentId(employee.getDepartmentId());
         newEmployee.setPosition(employee.getPosition());
-        newEmployee.setLogin(employee.getLogin());
+        newEmployee.setUserName(employee.getUserName());
         newEmployee.setPassword(employee.getPassword());
-        newEmployee.setRole(employee.getRole());
+        newEmployee.setRoles(employee.getRoles());
         newEmployee.setCreationDate(LocalDateTime.now());
 
         employeeService.save(newEmployee);
@@ -115,7 +116,7 @@ public class EmployeeController {
         );
     }
 
-    @PostMapping("/employees/departmentId{department_id}")
+    @PostMapping("/departmentId{department_id}")
     @JsonView(Views.UserRoleView.class)
     public ResponseEntity<?> createEmployeeByDepartmentId(
             @PathVariable("department_id") String departmentId,
@@ -132,9 +133,9 @@ public class EmployeeController {
         newEmployee.setCompanyId(employee.getCompanyId());
         newEmployee.setDepartmentId(id);
         newEmployee.setPosition(employee.getPosition());
-        newEmployee.setLogin(employee.getLogin());
+        newEmployee.setUserName(employee.getUserName());
         newEmployee.setPassword(employee.getPassword());
-        newEmployee.setRole(employee.getRole());
+        newEmployee.setRoles(employee.getRoles());
         newEmployee.setCreationDate(LocalDateTime.now());
 
         employeeService.save(newEmployee);
@@ -145,7 +146,7 @@ public class EmployeeController {
         );
     }
 
-    @GetMapping("/employees/{employee_id}")
+    @GetMapping("/{employee_id}")
     public ResponseEntity<?> getEmployeeById(
             @PathVariable("employee_id") String employeeId
     ) {
@@ -156,7 +157,7 @@ public class EmployeeController {
         );
     }
 
-    @PutMapping("/employees/{employee_id}")
+    @PutMapping("/{employee_id}")
     public ResponseEntity<?> editEmployee(
             @PathVariable("employee_id") String employeeId,
             @RequestBody Employee employee)
@@ -174,9 +175,9 @@ public class EmployeeController {
         editedEmployee.setCompanyId(employee.getCompanyId());
         editedEmployee.setDepartmentId(employee.getDepartmentId());
         editedEmployee.setPosition(employee.getPosition());
-        editedEmployee.setLogin(employee.getLogin());
+        editedEmployee.setUserName(employee.getUserName());
         editedEmployee.setPassword(employee.getPassword());
-        editedEmployee.setRole(employee.getRole());
+        editedEmployee.setRoles(employee.getRoles());
         editedEmployee.setCreationDate(LocalDateTime.now());
 
         employeeService.save(editedEmployee);
@@ -187,7 +188,7 @@ public class EmployeeController {
         );
     }
 
-    @DeleteMapping("/employees/{employee_id}")
+    @DeleteMapping("/{employee_id}")
     public ResponseEntity<?> completelyDeleteCompany(
             @PathVariable("employee_id") String employeeId
     ) {

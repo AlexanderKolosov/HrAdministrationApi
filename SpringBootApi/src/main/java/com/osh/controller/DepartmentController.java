@@ -9,11 +9,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-@RestController // Програмный модуль, который по установленному пути слушает запросы от пользователя и возвращает данные
+@RestController
+@RequestMapping("departments")
 public class DepartmentController {
     private final DepartmentServiceImpl departmentService;
 
@@ -22,7 +22,7 @@ public class DepartmentController {
         this.departmentService = departmentService;
     }
 
-    @GetMapping("/departments")
+    @GetMapping
     @JsonView(Views.UserRoleView.class)
     public ResponseEntity<?> getListOfDepartments( ) {
 
@@ -32,7 +32,7 @@ public class DepartmentController {
         );
     }
 
-    @GetMapping("/departments/companyId{company_id}")
+    @GetMapping("/companyId{company_id}")
     @JsonView(Views.UserRoleView.class)
     public ResponseEntity<?> getListOfDepartmentsByCompanyId(
             @PathVariable("company_id") String companyId
@@ -45,7 +45,7 @@ public class DepartmentController {
         );
     }
 
-    @PostMapping("/departments")
+    @PostMapping
     @JsonView(Views.UserRoleView.class)
     public ResponseEntity<?> createDepartment(
             @RequestBody Department department
@@ -61,7 +61,7 @@ public class DepartmentController {
         );
     }
 
-    @PostMapping("/departments/companyId{company_id}")
+    @PostMapping("/companyId{company_id}")
     @JsonView(Views.UserRoleView.class)
     public ResponseEntity<?> createDepartmentByCompanyId(
             @PathVariable("company_id") String companyId,
@@ -79,7 +79,7 @@ public class DepartmentController {
         );
     }
 
-    @GetMapping("/departments/{department_id}")
+    @GetMapping("/{department_id}")
     public ResponseEntity<?> getDepartmentById(
             @PathVariable("department_id") String departmentId
     ) {
@@ -90,7 +90,7 @@ public class DepartmentController {
         );
     }
 
-    @PutMapping("/departments/{department_id}")
+    @PutMapping("/{department_id}")
     public ResponseEntity<?> editDepartment(
             @PathVariable("department_id") String departmentId,
             @RequestBody Department department)
@@ -109,7 +109,7 @@ public class DepartmentController {
         );
     }
 
-    @DeleteMapping("/departments/{department_id}")
+    @DeleteMapping("/{department_id}")
     public ResponseEntity<?> deleteDepartment(
             @PathVariable("department_id") String departmentId
     ) {

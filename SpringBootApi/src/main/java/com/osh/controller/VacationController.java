@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 @RestController
+@RequestMapping("vacations")
 public class VacationController {
     private final VacationServiceImpl vacationService;
 
@@ -19,7 +20,7 @@ public class VacationController {
         this.vacationService = vacationService;
     }
 
-    @GetMapping("/vacations")
+    @GetMapping
     @JsonView(Views.UserRoleView.class)
     public ResponseEntity<?> getListOfVacations( ) {
 
@@ -29,7 +30,7 @@ public class VacationController {
         );
     }
 
-    @GetMapping("/vacations/companyId{company_id}")
+    @GetMapping("/companyId{company_id}")
     @JsonView(Views.UserRoleView.class)
     public ResponseEntity<?> getListOfVacationsByCompanyId(
             @PathVariable("company_id") String companyId
@@ -42,7 +43,7 @@ public class VacationController {
         );
     }
 
-    @GetMapping("/vacations/departmentId{department_id}")
+    @GetMapping("/departmentId{department_id}")
     @JsonView(Views.UserRoleView.class)
     public ResponseEntity<?> getListOfVacationsByDepartmentId(
             @PathVariable("department_id") String departmentId
@@ -55,7 +56,7 @@ public class VacationController {
         );
     }
 
-    @PostMapping("/vacations")
+    @PostMapping
     @JsonView(Views.UserRoleView.class)
     public ResponseEntity<?> createVacation(
             @RequestBody Vacation vacation
@@ -77,7 +78,7 @@ public class VacationController {
         );
     }
 
-    @PostMapping("/vacations/companyId{company_id}")
+    @PostMapping("/companyId{company_id}")
     @JsonView(Views.UserRoleView.class)
     public ResponseEntity<?> createVacationByCompanyId(
             @PathVariable("company_id") String companyId,
@@ -102,7 +103,7 @@ public class VacationController {
         );
     }
 
-    @PostMapping("/vacations/departmentId{department_id}")
+    @PostMapping("/departmentId{department_id}")
     @JsonView(Views.UserRoleView.class)
     public ResponseEntity<?> createVacationByDepartmentId(
             @PathVariable("department_id") String departmentId,
@@ -127,7 +128,7 @@ public class VacationController {
         );
     }
 
-    @GetMapping("/vacations/{vacation_id}")
+    @GetMapping("/{vacation_id}")
     public ResponseEntity<?> getVacation(
             @PathVariable("vacation_id") String vacationId
     ) {
@@ -138,7 +139,7 @@ public class VacationController {
         );
     }
 
-    @PutMapping("/vacations/{vacation_id}")
+    @PutMapping("/{vacation_id}")
     public ResponseEntity<?> editVacation(
             @PathVariable("vacation_id") String vacationId,
             @RequestBody Vacation vacation

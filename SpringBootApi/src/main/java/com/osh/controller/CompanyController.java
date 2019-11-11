@@ -12,7 +12,8 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-@RestController // Програмный модуль, который по установленному пути слушает запросы от пользователя и возвращает данные
+@RestController
+@RequestMapping("companies")
 public class CompanyController {
     private final CompanyServiceImpl companyService;
 
@@ -21,7 +22,7 @@ public class CompanyController {
         this.companyService = companyService;
     }
 
-    @GetMapping("/companies")
+    @GetMapping
     @JsonView(Views.UserRoleView.class)
     public ResponseEntity<?> getListOfCompanies( ) {
 
@@ -31,7 +32,7 @@ public class CompanyController {
         );
     }
 
-    @PostMapping("/companies")
+    @PostMapping
     @JsonView(Views.UserRoleView.class)
     public ResponseEntity<?> createCompany(
             @RequestBody Company company
@@ -46,7 +47,7 @@ public class CompanyController {
         );
     }
 
-    @GetMapping("/companies/{company_id}")
+    @GetMapping("/{company_id}")
     public ResponseEntity<?> getCompanyById(
             @PathVariable("company_id") String companyId
     ) {
@@ -58,7 +59,7 @@ public class CompanyController {
         );
     }
 
-    @PutMapping("/companies/{company_id}")
+    @PutMapping("/{company_id}")
     public ResponseEntity<?> editCompany(
             @PathVariable("company_id") String companyId,
             @RequestBody Company company)
@@ -77,7 +78,7 @@ public class CompanyController {
         );
     }
 
-    @DeleteMapping("/companies/{company_id}")
+    @DeleteMapping("/{company_id}")
     public ResponseEntity<?> completelyDeleteCompany(
             @PathVariable("company_id") String companyId
     ) {

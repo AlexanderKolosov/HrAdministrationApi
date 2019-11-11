@@ -1,6 +1,5 @@
 package com.osh.service;
 
-import com.osh.domain.Department;
 import com.osh.domain.Employee;
 
 import java.util.List;

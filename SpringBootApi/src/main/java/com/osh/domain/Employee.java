@@ -52,14 +52,14 @@ public class Employee {
 
 
     @Column(unique = true)
-    private String login;
+    private String userName;
 
 
     @Column(unique = true)
     private String password;
 
     @NotNull
-    private String role;
+    private String roles;
 
     @NotNull
     @Column(updatable = false) // Аннотация нужна для того, чтобы поле не обновлялось
@@ -157,12 +157,12 @@ public class Employee {
         this.position = position;
     }
 
-    public String getLogin() {
-        return login;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setLogin(String login) {
-        this.login = login;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getPassword() {
@@ -173,11 +173,11 @@ public class Employee {
         this.password = password;
     }
 
-    public String getRole() {
-        return role;
+    public String getRoles() {
+        return roles;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public void setRoles(String roles) {
+        this.roles = roles;
     }
 }

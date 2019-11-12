@@ -9,18 +9,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.time.LocalDateTime;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @RestController
 @RequestMapping("companies")
 public class CompanyController {
-    private final CompanyServiceImpl companyService;
-
     @Autowired
-    public CompanyController(CompanyServiceImpl companyService) {
-        this.companyService = companyService;
-    }
+    private CompanyServiceImpl companyService;
 
     @GetMapping
     @JsonView(Views.UserRoleView.class)
@@ -35,9 +33,10 @@ public class CompanyController {
     @PostMapping
     @JsonView(Views.UserRoleView.class)
     public ResponseEntity<?> createCompany(
-            @RequestBody Company company
+            @Valid @RequestBody Company company
     ) {
         Company newCompany = new Company(company.getName());
+
         newCompany.setCreationDate(LocalDateTime.now());
         companyService.save(newCompany);
 
@@ -52,30 +51,31 @@ public class CompanyController {
             @PathVariable("company_id") String companyId
     ) {
         int id = Integer.parseInt(companyId);
+        try {
+            Company company = getCompanyById(id);
+        }catch (NoSuchElementException e) {
+            return companyNotFound(id);
+        }
 
-        return new ResponseEntity<>(
-                companyService.getById(id),
-                HttpStatus.OK
-        );
+        return companyIsFoundById(id);
     }
 
     @PutMapping("/{company_id}")
     public ResponseEntity<?> editCompany(
             @PathVariable("company_id") String companyId,
-            @RequestBody Company company)
+            @Valid @RequestBody Company company)
     {
         int id = Integer.parseInt(companyId);
-        Optional<Company> optionalCompany = companyService.getById(id);
+        try {
+            Company editedCompany = getCompanyById(id);
+            editedCompany.setName(company.getName());
 
-        Company editedCompany = optionalCompany.get();
-        editedCompany.setName(company.getName());
+            companyService.save(editedCompany);
+        }catch (NoSuchElementException e) {
+            return companyNotFound(id);
+        }
 
-        companyService.save(editedCompany);
-
-        return new ResponseEntity<>(
-                companyService.getById(id),
-                HttpStatus.OK
-        );
+        return companyIsFoundById(id);
     }
 
     @DeleteMapping("/{company_id}")
@@ -83,13 +83,37 @@ public class CompanyController {
             @PathVariable("company_id") String companyId
     ) {
         int id = Integer.parseInt(companyId);
-        Optional<Company> optionalCompany = companyService.getById(id);
+        Company deletedCompany = null;
+        try {
+            deletedCompany = getCompanyById(id);
+        }catch (NoSuchElementException e) {
+            return companyNotFound(id);
+        }
 
-        Company deletedCompany = optionalCompany.get();
         companyService.deleteById(id);
 
         return new ResponseEntity<>(
                 companyService.getConfirmationOfDeletionMessage(deletedCompany.getName()),
+                HttpStatus.OK
+        );
+    }
+
+    Company getCompanyById(int id) throws NoSuchElementException {
+        Optional<Company> optionalCompany = companyService.getById(id);
+
+        return optionalCompany.get();
+    }
+
+    ResponseEntity<?> companyNotFound(int id) {
+        return new ResponseEntity<>(
+                "Company with id #" + id + " not found in the database.",
+                HttpStatus.BAD_REQUEST
+        );
+    }
+
+    private ResponseEntity<?> companyIsFoundById(int id) {
+        return new ResponseEntity<>(
+                companyService.getById(id),
                 HttpStatus.OK
         );
     }

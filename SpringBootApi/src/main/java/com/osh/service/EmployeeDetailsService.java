@@ -23,10 +23,10 @@ public class EmployeeDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
-        Optional<Employee> employee = employeeRepository.findByUserName(userName);
+        Optional<Employee> optionalEmployee = employeeRepository.findByUserName(userName);
 
-        employee.orElseThrow(() -> new UsernameNotFoundException("Employee with login " + userName + " not found."));
+        optionalEmployee.orElseThrow(() -> new UsernameNotFoundException("Employee with login " + userName + " not found."));
 
-        return employee.map(EmployeeDetails::new).get();
+        return optionalEmployee.map(EmployeeDetails::new).get();
     }
 }

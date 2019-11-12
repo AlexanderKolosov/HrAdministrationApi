@@ -13,4 +13,6 @@ public interface VacationRepository extends CrudRepository<Vacation, Integer> {
     List<Vacation> findByCompanyIdOrderById(int companyId);
 
     List<Vacation> findByDepartmentIdOrderById(int departmentId);
+
+    List<Vacation> findByEmployeeIdOrderById(int employeeId);
 }

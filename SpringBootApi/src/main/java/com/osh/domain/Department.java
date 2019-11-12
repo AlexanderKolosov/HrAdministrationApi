@@ -11,7 +11,6 @@ import java.time.LocalDateTime;
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = {"name", "companyId"}))
 public class Department {
     @Id
-    @NotNull
     @GeneratedValue(strategy = GenerationType.AUTO)
     @JsonView(Views.UserRoleView.class)
     private int id;
@@ -20,11 +19,9 @@ public class Department {
     @JsonView(Views.UserRoleView.class)
     private String name;
 
-    @NotNull
     @JsonView(Views.UserRoleView.class)
     private int companyId;
 
-    @NotNull
     @Column(updatable = false) // Аннотация нужна для того, чтобы поле не обновлялось
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDateTime creationDate;
@@ -32,9 +29,8 @@ public class Department {
     public Department() {
     }
 
-    public Department(String name, int companyId) {
+    public Department(String name) {
         this.name = name;
-        this.companyId = companyId;
     }
 
     public int getId() {

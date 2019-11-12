@@ -11,7 +11,6 @@ import java.time.LocalDateTime;
 @Table
 public class Company {
     @Id
-    @NotNull
     @GeneratedValue(strategy = GenerationType.AUTO)
     @JsonView(Views.UserRoleView.class)
     private int id;
@@ -21,7 +20,6 @@ public class Company {
     @JsonView(Views.UserRoleView.class)
     private String name;
 
-    @NotNull
     @Column(updatable = false) // Аннотация нужна для того, чтобы поле не обновлялось
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDateTime creationDate;

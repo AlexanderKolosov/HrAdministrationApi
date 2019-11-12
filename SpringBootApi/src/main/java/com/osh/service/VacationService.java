@@ -12,7 +12,13 @@ public interface VacationService {
 
     List<Vacation> getAllByDepartmentIdOrderById(int departmentId);
 
+    List<Vacation> getAllByEmployeeIdOrderById(int employeeId);
+
+    String getConfirmationOfDeletionMessage(int vacationId);
+
     Optional<Vacation> getById(int vacationId);
 
     void save(Vacation vacation);
+
+    void deleteById(int vacationId);
 }

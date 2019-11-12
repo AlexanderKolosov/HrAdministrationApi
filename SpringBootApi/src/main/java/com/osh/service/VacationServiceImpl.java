@@ -33,6 +33,16 @@ public class VacationServiceImpl implements VacationService {
     }
 
     @Override
+    public List<Vacation> getAllByEmployeeIdOrderById(int employeeId) {
+        return vacationRepository.findByEmployeeIdOrderById(employeeId);
+    }
+
+    @Override
+    public String getConfirmationOfDeletionMessage(int vacationId) {
+        return "Vacation id #" + vacationId + " deleted successfully.";
+    }
+
+    @Override
     public Optional<Vacation> getById(int vacationId) {
         return vacationRepository.findById(vacationId);
     }
@@ -40,5 +50,10 @@ public class VacationServiceImpl implements VacationService {
     @Override
     public void save(Vacation vacation) {
         vacationRepository.save(vacation);
+    }
+
+    @Override
+    public void deleteById(int vacationId) {
+        vacationRepository.deleteById(vacationId);
     }
 }

@@ -1,26 +1,26 @@
 package com.osh.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import com.osh.domain.Department;
-import com.osh.domain.Views;
+import com.osh.domain.*;
 import com.osh.service.DepartmentServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.time.LocalDateTime;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @RestController
 @RequestMapping("departments")
 public class DepartmentController {
-    private final DepartmentServiceImpl departmentService;
+    @Autowired
+    private DepartmentServiceImpl departmentService;
 
     @Autowired
-    public DepartmentController(DepartmentServiceImpl departmentService) {
-        this.departmentService = departmentService;
-    }
+    private CompanyController companyController;
 
     @GetMapping
     @JsonView(Views.UserRoleView.class)
@@ -32,28 +32,19 @@ public class DepartmentController {
         );
     }
 
-    @GetMapping("/companyId{company_id}")
-    @JsonView(Views.UserRoleView.class)
-    public ResponseEntity<?> getListOfDepartmentsByCompanyId(
-            @PathVariable("company_id") String companyId
-    ) {
-        int id = Integer.parseInt(companyId);
-
-        return new ResponseEntity<>(
-                departmentService.getAllByCompanyIdOrderById(id),
-                HttpStatus.OK
-        );
-    }
-
     @PostMapping
     @JsonView(Views.UserRoleView.class)
     public ResponseEntity<?> createDepartment(
-            @RequestBody Department department
+            @Valid  @RequestBody Department department
     ) {
-        Department newDepartment = new Department(department.getName(), department.getCompanyId());
-        newDepartment.setCreationDate(LocalDateTime.now());
+        int id = department.getCompanyId();
+        try {
+            Company company = companyController.getCompanyById(id);
+        } catch (NoSuchElementException e) {
+            return companyController.companyNotFound(id);
+        }
 
-        departmentService.save(newDepartment);
+        Department newDepartment = createNewDepartmentInDatabase(department);
 
         return new ResponseEntity<>(
                 departmentService.getAllByOrderById(),
@@ -61,17 +52,39 @@ public class DepartmentController {
         );
     }
 
-    @PostMapping("/companyId{company_id}")
+    @GetMapping("/companies/{company_id}")
+    @JsonView(Views.UserRoleView.class)
+    public ResponseEntity<?> getListOfDepartmentsByCompanyId(
+            @PathVariable("company_id") String companyId
+    ) {
+        int id = Integer.parseInt(companyId);
+        try {
+            Company company = companyController.getCompanyById(id);
+        }catch (NoSuchElementException e) {
+            return companyController.companyNotFound(id);
+        }
+
+        return new ResponseEntity<>(
+                departmentService.getAllByCompanyIdOrderById(id),
+                HttpStatus.OK
+        );
+    }
+
+    @PostMapping("/companies/{company_id}")
     @JsonView(Views.UserRoleView.class)
     public ResponseEntity<?> createDepartmentByCompanyId(
             @PathVariable("company_id") String companyId,
-            @RequestBody Department department
+            @Valid @RequestBody Department department
     ) {
         int id = Integer.parseInt(companyId);
-        Department newDepartment = new Department(department.getName(), id);
-        newDepartment.setCreationDate(LocalDateTime.now());
+        try {
+            Company company = companyController.getCompanyById(id);
+        }catch (NoSuchElementException e) {
+            return departmentNotFound(id);
+        }
 
-        departmentService.save(newDepartment);
+        department.setCompanyId(id);
+        Department newDepartment = createNewDepartmentInDatabase(department);
 
         return new ResponseEntity<>(
                 departmentService.getAllByCompanyIdOrderById(id),
@@ -83,30 +96,39 @@ public class DepartmentController {
     public ResponseEntity<?> getDepartmentById(
             @PathVariable("department_id") String departmentId
     ) {
+        int id = Integer.parseInt(departmentId);
+        try {
+            Department department = getDepartmentById(id);
+        }catch (NoSuchElementException e) {
+            return departmentNotFound(id);
+        }
 
-        return new ResponseEntity<>(
-                departmentService.getById(Integer.parseInt(departmentId)),
-                HttpStatus.OK
-        );
+        return departmentIsFoundById(id);
     }
 
     @PutMapping("/{department_id}")
     public ResponseEntity<?> editDepartment(
             @PathVariable("department_id") String departmentId,
-            @RequestBody Department department)
+            @Valid @RequestBody Department department)
     {
+        int companyId = department.getCompanyId();
+        try {
+            Company company = companyController.getCompanyById(companyId);
+        }catch (NoSuchElementException e) {
+            return companyController.companyNotFound(companyId);
+        }
+
         int id = Integer.parseInt(departmentId);
-        Optional<Department> optionalDepartment = departmentService.getById(id);
+        try {
+            Department editedDepartment = getDepartmentById(id);
+            editedDepartment.setName(department.getName());
 
-        Department editedDepartment = optionalDepartment.get();
-        editedDepartment.setName(department.getName());
+            departmentService.save(editedDepartment);
+        }catch (NoSuchElementException e) {
+            return departmentNotFound(id);
+        }
 
-        departmentService.save(editedDepartment);
-
-        return new ResponseEntity<>(
-                departmentService.getById(id),
-                HttpStatus.OK
-        );
+        return departmentIsFoundById(id);
     }
 
     @DeleteMapping("/{department_id}")
@@ -114,9 +136,12 @@ public class DepartmentController {
             @PathVariable("department_id") String departmentId
     ) {
         int id = Integer.parseInt(departmentId);
-        Optional<Department> optionalDepartment = departmentService.getById(id);
-
-        Department deletedDepartment = optionalDepartment.get();
+        Department deletedDepartment;
+        try {
+            deletedDepartment = getDepartmentById(id);
+        } catch (NoSuchElementException e) {
+            return departmentNotFound(id);
+        }
 
         departmentService.deleteById(id);
 
@@ -124,5 +149,39 @@ public class DepartmentController {
                 departmentService.getConfirmationOfDeletionMessage(deletedDepartment.getName()),
                 HttpStatus.OK
         );
+    }
+
+    Department getDepartmentById(int id) throws NoSuchElementException {
+        Optional<Department> optionalDepartment = departmentService.getById(id);
+
+        return optionalDepartment.get();
+    }
+
+    private Department createNewDepartmentInDatabase(Department department) {
+        Department newDepartment = new Department(department.getName());
+        newDepartment.setCompanyId(department.getCompanyId());
+        newDepartment.setCreationDate(LocalDateTime.now());
+
+        departmentService.save(newDepartment);
+
+        return newDepartment;
+    }
+
+    ResponseEntity<?> departmentNotFound(int id) {
+        return new ResponseEntity<>(
+                "Department with id #" + id + " not found in the database.",
+                HttpStatus.BAD_REQUEST
+        );
+    }
+
+    private ResponseEntity<?> departmentIsFoundById(int id) {
+        return new ResponseEntity<>(
+                departmentService.getById(id),
+                HttpStatus.OK
+        );
+    }
+
+    CompanyController getCompanyController() {
+        return companyController;
     }
 }

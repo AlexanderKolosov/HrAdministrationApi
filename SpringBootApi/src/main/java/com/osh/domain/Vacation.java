@@ -11,41 +11,33 @@ import java.time.LocalDateTime;
 @Table
 public class Vacation {
     @Id
-    @NotNull
     @GeneratedValue(strategy = GenerationType.AUTO)
     @JsonView(Views.UserRoleView.class)
     private int id;
 
-    @NotNull
     @Column(updatable = false)
     @JsonView(Views.UserRoleView.class)
     private int employeeId;
 
-    @NotNull
     @Column(updatable = false)
     @JsonView(Views.UserRoleView.class)
     private int companyId;
 
-    @NotNull
     @Column(updatable = false)
     @JsonView(Views.UserRoleView.class)
     private int departmentId;
 
-    @NotNull
     @Column(updatable = false) // Аннотация нужна для того, чтобы поле не обновлялось
     @JsonView(Views.UserRoleView.class)
     private String startVacationDate;
 
-    @NotNull
     @Column(updatable = false)
     @JsonView(Views.UserRoleView.class)
     private int periodOfDays;
 
-    @NotNull
     @JsonView(Views.UserRoleView.class)
     private String status;
 
-    @NotNull
     @Column(updatable = false) // Аннотация нужна для того, чтобы поле не обновлялось
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDateTime creationDate;

@@ -1,26 +1,26 @@
 package com.osh.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import com.osh.domain.Employee;
-import com.osh.domain.Views;
+import com.osh.domain.*;
 import com.osh.service.EmployeeServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.time.LocalDateTime;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @RestController
 @RequestMapping("employees")
 public class EmployeeController {
-    private final EmployeeServiceImpl employeeService;
+    @Autowired
+    private EmployeeServiceImpl employeeService;
 
     @Autowired
-    public EmployeeController(EmployeeServiceImpl employeeService) {
-        this.employeeService = employeeService;
-    }
+    private DepartmentController departmentController;
 
     @GetMapping
     @JsonView(Views.UserRoleView.class)
@@ -32,52 +32,26 @@ public class EmployeeController {
         );
     }
 
-    @GetMapping("/companyId{company_id}")
-    @JsonView(Views.UserRoleView.class)
-    public ResponseEntity<?> getListOfEmployeesByCompanyId(
-            @PathVariable("company_id") String companyId
-    ) {
-        int id = Integer.parseInt(companyId);
-
-        return new ResponseEntity<>(
-                employeeService.getAllByCompanyIdOrderById(id),
-                HttpStatus.OK
-        );
-    }
-
-    @GetMapping("/departmentId{department_id}")
-    @JsonView(Views.UserRoleView.class)
-    public ResponseEntity<?> getListOfEmployeesByDepartmentId(
-            @PathVariable("department_id") String departmentId
-    ) {
-        int id = Integer.parseInt(departmentId);
-
-        return new ResponseEntity<>(
-                employeeService.getAllByDepartmentIdOrderById(id),
-                HttpStatus.OK
-        );
-    }
-
     @PostMapping
     @JsonView(Views.UserRoleView.class)
     public ResponseEntity<?> createEmployee(
-            @RequestBody Employee employee
-            ) {
-        Employee newEmployee = new Employee();
-        newEmployee.setFirstName(employee.getFirstName());
-        newEmployee.setLastName(employee.getLastName());
-        newEmployee.setAge(employee.getAge());
-        newEmployee.setPassportNumber(employee.getPassportNumber());
-        newEmployee.setPhoneNumber(employee.getPhoneNumber());
-        newEmployee.setAddress(employee.getAddress());
-        newEmployee.setCompanyId(employee.getCompanyId());
-        newEmployee.setDepartmentId(employee.getDepartmentId());
-        newEmployee.setPosition(employee.getPosition());
-        newEmployee.setUserName(employee.getUserName());
-        newEmployee.setPassword(employee.getPassword());
-        newEmployee.setRoles(employee.getRoles());
-        newEmployee.setCreationDate(LocalDateTime.now());
+            @Valid @RequestBody Employee employee
+    ) {
+        int companyId = employee.getCompanyId();
+        try {
+            Company company = getCompanyController().getCompanyById(companyId);
+        } catch (NoSuchElementException e) {
+            return getCompanyController().companyNotFound(companyId);
+        }
 
+        int departmentId = employee.getDepartmentId();
+        try {
+            Department department = departmentController.getDepartmentById(departmentId);
+        } catch (NoSuchElementException e) {
+            return departmentController.departmentNotFound(departmentId);
+        }
+
+        Employee newEmployee = createNewEmployeeInDatabase(employee);
         employeeService.save(newEmployee);
 
         return new ResponseEntity<>(
@@ -86,28 +60,46 @@ public class EmployeeController {
         );
     }
 
-    @PostMapping("/companyId{company_id}")
+    @GetMapping("/companies/{company_id}")
+    @JsonView(Views.UserRoleView.class)
+    public ResponseEntity<?> getListOfEmployeesByCompanyId(
+            @PathVariable("company_id") String companyId
+    ) {
+        int id = Integer.parseInt(companyId);
+        try {
+            Company company = getCompanyController().getCompanyById(id);
+        } catch (NoSuchElementException e) {
+            return getCompanyController().companyNotFound(id);
+        }
+
+        return new ResponseEntity<>(
+                employeeService.getAllByCompanyIdOrderById(id),
+                HttpStatus.OK
+        );
+    }
+
+    @PostMapping("/companies/{company_id}")
     @JsonView(Views.UserRoleView.class)
     public ResponseEntity<?> createEmployeeByCompanyId(
             @PathVariable("company_id") String companyId,
-            @RequestBody Employee employee
+            @Valid @RequestBody Employee employee
     ) {
         int id = Integer.parseInt(companyId);
-        Employee newEmployee = new Employee();
-        newEmployee.setFirstName(employee.getFirstName());
-        newEmployee.setLastName(employee.getLastName());
-        newEmployee.setAge(employee.getAge());
-        newEmployee.setPassportNumber(employee.getPassportNumber());
-        newEmployee.setPhoneNumber(employee.getPhoneNumber());
-        newEmployee.setAddress(employee.getAddress());
-        newEmployee.setCompanyId(id);
-        newEmployee.setDepartmentId(employee.getDepartmentId());
-        newEmployee.setPosition(employee.getPosition());
-        newEmployee.setUserName(employee.getUserName());
-        newEmployee.setPassword(employee.getPassword());
-        newEmployee.setRoles(employee.getRoles());
-        newEmployee.setCreationDate(LocalDateTime.now());
+        try {
+            Company company = getCompanyController().getCompanyById(id);
+        } catch (NoSuchElementException e) {
+            return getCompanyController().companyNotFound(id);
+        }
 
+        int departmentId = employee.getDepartmentId();
+        try {
+            Department department = departmentController.getDepartmentById(departmentId);
+        } catch (NoSuchElementException e) {
+            return departmentController.departmentNotFound(departmentId);
+        }
+
+        employee.setCompanyId(id);
+        Employee newEmployee = createNewEmployeeInDatabase(employee);
         employeeService.save(newEmployee);
 
         return new ResponseEntity<>(
@@ -116,28 +108,46 @@ public class EmployeeController {
         );
     }
 
-    @PostMapping("/departmentId{department_id}")
+    @GetMapping("/departments/{department_id}")
+    @JsonView(Views.UserRoleView.class)
+    public ResponseEntity<?> getListOfEmployeesByDepartmentId(
+            @PathVariable("department_id") String departmentId
+    ) {
+        int id = Integer.parseInt(departmentId);
+        try {
+            Department department = departmentController.getDepartmentById(id);
+        } catch (NoSuchElementException e) {
+            return departmentController.departmentNotFound(id);
+        }
+
+        return new ResponseEntity<>(
+                employeeService.getAllByDepartmentIdOrderById(id),
+                HttpStatus.OK
+        );
+    }
+
+    @PostMapping("/departments/{department_id}")
     @JsonView(Views.UserRoleView.class)
     public ResponseEntity<?> createEmployeeByDepartmentId(
             @PathVariable("department_id") String departmentId,
-            @RequestBody Employee employee
+            @Valid @RequestBody Employee employee
     ) {
         int id = Integer.parseInt(departmentId);
-        Employee newEmployee = new Employee();
-        newEmployee.setFirstName(employee.getFirstName());
-        newEmployee.setLastName(employee.getLastName());
-        newEmployee.setAge(employee.getAge());
-        newEmployee.setPassportNumber(employee.getPassportNumber());
-        newEmployee.setPhoneNumber(employee.getPhoneNumber());
-        newEmployee.setAddress(employee.getAddress());
-        newEmployee.setCompanyId(employee.getCompanyId());
-        newEmployee.setDepartmentId(id);
-        newEmployee.setPosition(employee.getPosition());
-        newEmployee.setUserName(employee.getUserName());
-        newEmployee.setPassword(employee.getPassword());
-        newEmployee.setRoles(employee.getRoles());
-        newEmployee.setCreationDate(LocalDateTime.now());
+        try {
+            Department department = departmentController.getDepartmentById(id);
+        } catch (NoSuchElementException e) {
+            return departmentController.departmentNotFound(id);
+        }
 
+        int companyId = employee.getCompanyId();
+        try {
+            Company company = getCompanyController().getCompanyById(companyId);
+        } catch (NoSuchElementException e) {
+            return getCompanyController().companyNotFound(companyId);
+        }
+
+        employee.setDepartmentId(id);
+        Employee newEmployee = createNewEmployeeInDatabase(employee);
         employeeService.save(newEmployee);
 
         return new ResponseEntity<>(
@@ -150,42 +160,46 @@ public class EmployeeController {
     public ResponseEntity<?> getEmployeeById(
             @PathVariable("employee_id") String employeeId
     ) {
+        int id = Integer.parseInt(employeeId);
+        try {
+            Employee employee = getEmployeeById(id);
+        } catch (NoSuchElementException e) {
+            return employeeNotFound(id);
+        }
 
-        return new ResponseEntity<>(
-                employeeService.getById(Integer.parseInt(employeeId)),
-                HttpStatus.OK
-        );
+        return employeeIsFoundById(id);
     }
 
     @PutMapping("/{employee_id}")
     public ResponseEntity<?> editEmployee(
             @PathVariable("employee_id") String employeeId,
-            @RequestBody Employee employee)
+            @Valid @RequestBody Employee employee)
     {
-        int id = Integer.parseInt(employeeId);
-        Optional<Employee> optionalEmployee = employeeService.getById(id);
+        int departmentId = employee.getDepartmentId();
+        try {
+            Department department = departmentController.getDepartmentById(departmentId);
+        } catch (NoSuchElementException e) {
+            return departmentController.departmentNotFound(departmentId);
+        }
+        int companyId = employee.getCompanyId();
+        try {
+            Company company = getCompanyController().getCompanyById(companyId);
+        } catch (NoSuchElementException e) {
+            return getCompanyController().companyNotFound(companyId);
+        }
 
-        Employee editedEmployee = optionalEmployee.get();
-        editedEmployee.setFirstName(employee.getFirstName());
-        editedEmployee.setLastName(employee.getLastName());
-        editedEmployee.setAge(employee.getAge());
-        editedEmployee.setPassportNumber(employee.getPassportNumber());
-        editedEmployee.setPhoneNumber(employee.getPhoneNumber());
-        editedEmployee.setAddress(employee.getAddress());
-        editedEmployee.setCompanyId(employee.getCompanyId());
-        editedEmployee.setDepartmentId(employee.getDepartmentId());
-        editedEmployee.setPosition(employee.getPosition());
-        editedEmployee.setUserName(employee.getUserName());
-        editedEmployee.setPassword(employee.getPassword());
-        editedEmployee.setRoles(employee.getRoles());
-        editedEmployee.setCreationDate(LocalDateTime.now());
+        int id = Integer.parseInt(employeeId);
+        Employee editedEmployee;
+        try {
+            editedEmployee = getEmployeeById(id);
+            fillEmployeeData(editedEmployee, employee);
+        } catch (NoSuchElementException e) {
+            return employeeNotFound(id);
+        }
 
         employeeService.save(editedEmployee);
 
-        return new ResponseEntity<>(
-                employeeService.getById(id),
-                HttpStatus.OK
-        );
+        return employeeIsFoundById(id);
     }
 
     @DeleteMapping("/{employee_id}")
@@ -193,9 +207,12 @@ public class EmployeeController {
             @PathVariable("employee_id") String employeeId
     ) {
         int id = Integer.parseInt(employeeId);
-        Optional<Employee> optionalEmployee = employeeService.getById(id);
-
-        Employee deletedEmployee = optionalEmployee.get();
+        Employee deletedEmployee;
+        try {
+            deletedEmployee = getEmployeeById(id);
+        } catch (NoSuchElementException e) {
+            return employeeNotFound(id);
+        }
 
         employeeService.deleteById(id);
 
@@ -204,5 +221,57 @@ public class EmployeeController {
                         deletedEmployee.getFirstName() + " " + deletedEmployee.getLastName()),
                 HttpStatus.OK
         );
+    }
+
+    Employee getEmployeeById(int id) throws NoSuchElementException {
+        Optional<Employee> optionalEmployee = employeeService.getById(id);
+
+        return optionalEmployee.get();
+    }
+
+    private Employee createNewEmployeeInDatabase(Employee employee) {
+        Employee newEmployee = new Employee();
+
+        fillEmployeeData(newEmployee, employee);
+
+        return newEmployee;
+    }
+
+    private void fillEmployeeData(Employee available, Employee requestBody) {
+        available.setFirstName(requestBody.getFirstName());
+        available.setLastName(requestBody.getLastName());
+        available.setAge(requestBody.getAge());
+        available.setPassportNumber(requestBody.getPassportNumber());
+        available.setPhoneNumber(requestBody.getPhoneNumber());
+        available.setAddress(requestBody.getAddress());
+        available.setCompanyId(requestBody.getCompanyId());
+        available.setDepartmentId(requestBody.getDepartmentId());
+        available.setPosition(requestBody.getPosition());
+        available.setUserName(requestBody.getUserName());
+        available.setPassword(requestBody.getPassword());
+        available.setRoles(requestBody.getRoles());
+        available.setCreationDate(LocalDateTime.now());
+    }
+
+    ResponseEntity<?> employeeNotFound(int id) {
+        return new ResponseEntity<>(
+                "Employee with id #" + id + " not found in the database.",
+                HttpStatus.BAD_REQUEST
+        );
+    }
+
+    private ResponseEntity<?> employeeIsFoundById(int id) {
+        return new ResponseEntity<>(
+                employeeService.getById(id),
+                HttpStatus.OK
+        );
+    }
+
+    CompanyController getCompanyController() {
+        return departmentController.getCompanyController();
+    }
+
+    DepartmentController getDepartmentController() {
+        return departmentController;
     }
 }

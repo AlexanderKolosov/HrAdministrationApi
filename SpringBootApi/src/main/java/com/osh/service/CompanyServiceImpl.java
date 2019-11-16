@@ -5,6 +5,7 @@ import com.osh.repository.CompanyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,6 +26,12 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     public Optional<Company> getById(int companyId) {
         return companyRepository.findById(companyId);
+    }
+
+    @Override
+    @Transactional
+    public Optional<Company> getByName(String companyName) {
+        return companyRepository.findByName(companyName);
     }
 
     @Override

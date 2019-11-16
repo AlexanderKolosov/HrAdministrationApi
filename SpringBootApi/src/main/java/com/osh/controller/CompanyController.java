@@ -79,7 +79,7 @@ public class CompanyController {
     }
 
     @DeleteMapping("/{company_id}")
-    public ResponseEntity<?> completelyDeleteCompany(
+    public ResponseEntity<?> deleteCompany(
             @PathVariable("company_id") String companyId
     ) {
         int id = Integer.parseInt(companyId);
@@ -104,6 +104,12 @@ public class CompanyController {
         return optionalCompany.get();
     }
 
+    Company getCompanyByName(String companyName) throws NoSuchElementException {
+        Optional<Company> optionalCompany = companyService.getByName(companyName);
+
+        return optionalCompany.get();
+    }
+
     ResponseEntity<?> companyNotFound(int id) {
         return new ResponseEntity<>(
                 "Company with id #" + id + " not found in the database.",
@@ -116,5 +122,9 @@ public class CompanyController {
                 companyService.getById(id),
                 HttpStatus.OK
         );
+    }
+
+    public CompanyServiceImpl getCompanyService() {
+        return companyService;
     }
 }

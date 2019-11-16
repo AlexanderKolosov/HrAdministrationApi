@@ -10,6 +10,8 @@ public interface CompanyService {
 
     Optional<Company> getById(int companyId);
 
+    Optional<Company> getByName(String companyName);
+
     String getConfirmationOfDeletionMessage(String companyName);
 
     void save(Company company);

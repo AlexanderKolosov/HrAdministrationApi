@@ -3,6 +3,8 @@ package com.osh.domain;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -16,10 +18,14 @@ public class EmployeeDetails implements UserDetails {
 
     public EmployeeDetails(Employee employee) {
         this.userName = employee.getUserName();
-        this.password = employee.getPassword();
+        this.password = passwordEncoder().encode(employee.getPassword());
         this.authorities = Arrays.stream(employee.getRoles().split(","))
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
+    }
+
+    PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
     @Override

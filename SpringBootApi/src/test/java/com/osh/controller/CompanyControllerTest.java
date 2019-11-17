@@ -44,6 +44,7 @@ public class CompanyControllerTest {
     private static int companyId = 0;
 
     @Test
+    @Transactional
     public void getListOfCompanies() throws Exception {
         this.mockMvc.perform(get("/companies"))
                 .andDo(print())
@@ -52,6 +53,7 @@ public class CompanyControllerTest {
     }
 
     @Test
+    @Transactional
     public void createCompany() throws Exception {
         companyName = "TestCompany";
         company = new Company();
@@ -68,6 +70,7 @@ public class CompanyControllerTest {
     }
 
     @Test
+    @Transactional
     public void getCompanyById() throws Exception {
         companyName = "TestCompany";
         company = new Company();
@@ -89,6 +92,7 @@ public class CompanyControllerTest {
     }
 
     @Test
+    @Transactional
     public void editCompany() throws Exception {
         companyName = "TestCompany";
         company = new Company();
@@ -113,6 +117,7 @@ public class CompanyControllerTest {
     }
 
     @Test
+    @Transactional
     public void deleteCompany() throws Exception {
         companyName = "TestCompany";
         company = new Company();

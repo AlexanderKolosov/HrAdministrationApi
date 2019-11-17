@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Entity
@@ -27,7 +26,7 @@ public class Vacation {
     @JsonView(Views.UserRoleView.class)
     private int departmentId;
 
-    @Column(updatable = false) // Аннотация нужна для того, чтобы поле не обновлялось
+    @Column(updatable = false)
     @JsonView(Views.UserRoleView.class)
     private String startVacationDate;
 
@@ -38,7 +37,7 @@ public class Vacation {
     @JsonView(Views.UserRoleView.class)
     private String status;
 
-    @Column(updatable = false) // Аннотация нужна для того, чтобы поле не обновлялось
+    @Column(updatable = false)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDateTime creationDate;
 

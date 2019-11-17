@@ -1,17 +1,12 @@
 package com.osh;
 
-import com.osh.controller.CompanyController;
-import com.osh.controller.DepartmentController;
-import com.osh.controller.EmployeeController;
-import com.osh.controller.VacationController;
-import com.osh.domain.Department;
+import com.osh.controller.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

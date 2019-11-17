@@ -7,7 +7,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
-@Entity // Указываем Спрингу, что это сущность, а не обычный POJO Bean.
+@Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = {"name", "companyId"}))
 public class Department {
     @Id
@@ -22,7 +22,7 @@ public class Department {
     @JsonView(Views.UserRoleView.class)
     private int companyId;
 
-    @Column(updatable = false) // Аннотация нужна для того, чтобы поле не обновлялось
+    @Column(updatable = false)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDateTime creationDate;
 

@@ -26,10 +26,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         auth.userDetailsService(userDetailService).passwordEncoder(passwordEncoder())
                 .and()
                     .inMemoryAuthentication()
-                    .withUser("admin")
-                    .password(passwordEncoder().encode("admin"))
-                    .authorities(new SimpleGrantedAuthority("ADMIN"));
-
+                        .withUser("admin")
+                        .password(passwordEncoder().encode("admin"))
+                        .authorities(new SimpleGrantedAuthority("ADMIN"))
+                    .and()
+                        .withUser("user")
+                        .password(passwordEncoder().encode("user"))
+                        .authorities(new SimpleGrantedAuthority("USER"));
     }
 
     @Override

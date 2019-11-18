@@ -1,0 +1,6 @@
+{ 
+    "id" : 1, 
+    "name" : "First Department",
+    "companyId": 1,
+    "creationDate": "2019-11-06"
+}

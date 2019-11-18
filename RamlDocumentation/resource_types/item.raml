@@ -1,0 +1,18 @@
+#%RAML 1.0 ResourceType
+# singleItem:
+  description: Company structure and human resources
+  get:
+    description: Get list of <<resourcePathName | !uppercamelcase | !singularize>>
+    securedBy: [basic]
+    is:
+      [{ secured: { roles: ADMIN } }, 400Error, 401Error, 403Error, 404Error : { typeName: <<resourcePathName | !uppercamelcase | !singularize>> }, getSingleItemRequest: { typeName: <<resourcePathName | !uppercamelcase | !singularize>>, example: <<exampleItem>> }]
+  put:
+    description: Edit <<resourcePathName | !uppercamelcase | !singularize>>
+    securedBy: [basic]
+    is:
+      [{ secured: { roles: ADMIN } }, 301Error, 400Error, 401Error, 403Error, 404Error : { typeName: <<resourcePathName | !uppercamelcase | !singularize>> }, putRequest: { typeName: <<resourcePathName | !uppercamelcase | !singularize>>, example: <<exampleItem>> }]
+  delete:
+    description: Delete <<resourcePathName | !uppercamelcase | !singularize>>
+    securedBy: [basic]
+    is:
+      [{ secured: { roles: ADMIN } }, 400Error, 401Error, 403Error, 404Error : { typeName: <<resourcePathName | !uppercamelcase | !singularize>> }, deleteRequest: { message: "The <<resourcePathName | !uppercamelcase | !singularize>> was successfully deleted"}]

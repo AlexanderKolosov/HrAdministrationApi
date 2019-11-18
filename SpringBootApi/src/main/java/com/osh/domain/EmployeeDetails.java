@@ -17,7 +17,7 @@ public class EmployeeDetails implements UserDetails {
     private List<GrantedAuthority> authorities;
 
     public EmployeeDetails(Employee employee) {
-        this.userName = employee.getUserName();
+        this.userName = employee.getLogin();
         this.password = passwordEncoder().encode(employee.getPassword());
         this.authorities = Arrays.stream(employee.getRoles().split(","))
                 .map(SimpleGrantedAuthority::new)

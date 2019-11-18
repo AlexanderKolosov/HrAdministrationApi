@@ -247,7 +247,7 @@ public class EmployeeController {
         available.setCompanyId(requestBody.getCompanyId());
         available.setDepartmentId(requestBody.getDepartmentId());
         available.setPosition(requestBody.getPosition());
-        available.setUserName(requestBody.getUserName());
+        available.setLogin(requestBody.getLogin());
         available.setPassword(requestBody.getPassword());
         available.setRoles(requestBody.getRoles());
         available.setCreationDate(LocalDateTime.now());

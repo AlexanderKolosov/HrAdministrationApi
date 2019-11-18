@@ -1,0 +1,11 @@
+#%RAML 1.0 ResourceType
+# listOfItems:
+  description: Company structure and human resources
+  get:
+    description: Get list of <<resourcePathName | !uppercamelcase | !singularize>>
+    securedBy: [basic]
+    is: [401Error, 404Error : { typeName: <<resourcePathName | !uppercamelcase | !singularize>> }, getRequest: { typeName: <<resourcePathName | !uppercamelcase | !singularize>>, example: <<exampleItems>>}]
+  post:
+    description: Create new <<resourcePathName | !uppercamelcase | !singularize>>
+    securedBy: [basic]
+    is: [{ secured: { roles: ADMIN } }, 400Error, 401Error, 403Error, 404Error : { typeName: <<resourcePathName | !uppercamelcase | !singularize>> }, postRequest: { typeName: <<resourcePathName | !uppercamelcase | !singularize>>, example: <<exampleItems>>}]

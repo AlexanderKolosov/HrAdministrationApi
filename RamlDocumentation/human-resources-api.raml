@@ -1,0 +1,157 @@
+#%RAML 1.0
+title: human-resources-api
+version: v1
+protocols: [ HTTPS ]
+baseUri: https://localhost:8080/api/{version}
+mediaType: application/json
+securitySchemes: 
+  basic: !include /security_scheme/securityScheme.raml
+
+types:
+  
+  Employee: !include /data_types/employee.raml
+  Vacation: !include /data_types/vacation.raml
+  Department: !include /data_types/department.raml
+  Company: !include /data_types/company.raml
+
+traits:
+  secured:
+    headers:
+      <<roles>>:
+        description: A valid <<roles>> is required
+        
+  getRequest:
+    responses:
+      200:
+        body:
+          application/json:
+            type: <<typeName>>[]
+            example: <<example>>
+
+  getSingleItemRequest:
+    responses:
+      200:
+        body:
+          application/json:
+            type: <<typeName>>
+            example: <<example>>
+
+  postRequest:
+    responses:
+      201:
+        body:
+          application/json:
+            type: <<typeName>>[]
+            example: <<example>>
+
+  putRequest:
+    responses:
+      200:
+        body:
+          application/json:
+            type: <<typeName>>
+            example: <<example>>
+
+  deleteRequest:
+    responses:
+      204:
+
+  301Error:
+    responses:
+      301:
+        body:
+          application/json:
+            example: { "message" : "Nothing was modified by the request" }
+
+  400Error:
+    responses:
+      400:
+        body:
+          application/json:
+            example: { "message" : "Bad Request" }
+
+  401Error:
+    responses:
+      401:
+        body:
+          application/json:
+            example: { "message" : "Unauthorized" }
+
+  403Error:
+    responses:
+      401:
+        body:
+          application/json:
+            example: { "message" : "Forbidden" }
+
+  404Error:
+    responses:
+      404:
+        body:
+          application/json:
+            example: { "message" : "Resource not found" }
+
+resourceTypes:
+
+  listOfItems: !include resource_types/listOfItems.raml
+  singleItem: !include  resource_types/item.raml
+  
+/companies:
+  type: 
+    listOfItems: 
+      exampleItems: !include json_examples/companies.json
+  /{company_id}:
+    type:
+      singleItem:
+        exampleItem: !include json_examples/company.json    
+  
+/departments:
+  type:
+    listOfItems:
+      exampleItems: !include json_examples/departments.json
+  /{department_id}:
+    type:
+      singleItem:
+        exampleItem: !include json_examples/department.json
+  /companies/{company_id}:
+    type: 
+      listOfItems: 
+        exampleItems: !include json_examples/departments.json
+
+/employees:
+  type:
+    listOfItems:
+      exampleItems: !include json_examples/employees.json
+  /{employee_id}:
+    type:
+      singleItem:
+        exampleItem: !include json_examples/employee.json
+  /companies/{company_id}:
+    type: 
+      listOfItems: 
+        exampleItems: !include json_examples/employees.json
+  /departments/{department_id}:
+    type:
+      listOfItems:
+        exampleItems: !include json_examples/employees.json
+
+/vacations:
+  type:
+    listOfItems:
+      exampleItems: !include json_examples/vacations.json
+  /{id}:
+    type:
+      singleItem:
+        exampleItem: !include json_examples/vacation.json
+  /companies/{company_id}:
+    type: 
+      listOfItems: 
+        exampleItems: !include json_examples/vacations.json
+  /departments/{department_id}:
+    type:
+      listOfItems:
+        exampleItems: !include json_examples/vacations.json
+  /employees/{employee_id}:
+    type:
+      listOfItems:
+        exampleItems: !include json_examples/vacations.json

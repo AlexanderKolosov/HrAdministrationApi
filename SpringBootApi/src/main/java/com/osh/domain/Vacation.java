@@ -28,7 +28,7 @@ public class Vacation {
 
     @Column(updatable = false)
     @JsonView(Views.UserRoleView.class)
-    private String startVacationDate;
+    private String startDate;
 
     @Column(updatable = false)
     @JsonView(Views.UserRoleView.class)
@@ -60,12 +60,12 @@ public class Vacation {
         this.employeeId = employeeId;
     }
 
-    public String getStartVacationDate() {
-        return startVacationDate;
+    public String getStartDate() {
+        return startDate;
     }
 
-    public void setStartVacationDate(String startVacationDate) {
-        this.startVacationDate = startVacationDate;
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
     }
 
     public int getPeriodOfDays() {

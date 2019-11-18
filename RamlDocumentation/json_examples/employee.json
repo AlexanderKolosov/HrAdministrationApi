@@ -1,0 +1,16 @@
+{ 
+    "id" : 9, 
+    "firstName" : "Alexander",
+    "lastName" : "Kolosov",
+    "age" : 41,
+    "passportNumber" : "AA888888",
+    "phoneNumber" : "+37369888888",
+    "address" : "MD",
+    "companyId" : 2,
+    "departmentId" : 3,
+    "position" : "java developer", 
+    "login" : "alexander", 
+    "password" : "kolosov", 
+    "roles" : "employee",
+    "creationDate": "2019-11-06"
+}

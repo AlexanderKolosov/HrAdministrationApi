@@ -1,0 +1,11 @@
+#%RAML 1.0 SecurityScheme
+description: Each request must contain the headers necessary for basic authentication
+type: Basic Authentication
+describedBy:
+  headers:
+    Authorization:
+      description: Used to send the Base64-encoded "username:password" credentials
+      type: string
+  responses:
+    401:
+      description: Unauthorized

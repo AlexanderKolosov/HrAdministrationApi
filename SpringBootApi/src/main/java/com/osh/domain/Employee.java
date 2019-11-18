@@ -49,7 +49,7 @@ public class Employee {
 
 
     @Column(unique = true)
-    private String userName;
+    private String login;
 
 
     @Column(unique = true)
@@ -153,12 +153,12 @@ public class Employee {
         this.position = position;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getLogin() {
+        return login;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setLogin(String login) {
+        this.login = login;
     }
 
     public String getPassword() {

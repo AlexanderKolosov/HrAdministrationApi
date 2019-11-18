@@ -1,0 +1,18 @@
+[
+    { 
+      "id" : 9, 
+      "firstName" : "Alexander",
+      "lastName" : "Kolosov",
+      "companyId" : 2,
+      "departmentId" : 1,
+      "position" : "java developer"
+    },
+    { 
+      "id" : 5, 
+      "firstName" : "Barack",
+      "lastName" : "Obama",
+      "companyId" : 2,
+      "departmentId" : 3,
+      "position" : "president"
+    }
+]

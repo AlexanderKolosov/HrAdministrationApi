@@ -324,7 +324,7 @@ public class VacationController {
         available.setEmployeeId(requestBody.getEmployeeId());
         available.setCompanyId(requestBody.getCompanyId());
         available.setDepartmentId(requestBody.getDepartmentId());
-        available.setStartVacationDate(requestBody.getStartVacationDate());
+        available.setStartDate(requestBody.getStartDate());
         available.setPeriodOfDays(requestBody.getPeriodOfDays());
         available.setStatus("In Process");
         available.setCreationDate(LocalDateTime.now());

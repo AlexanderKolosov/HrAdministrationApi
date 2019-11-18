@@ -1,0 +1,5 @@
+FROM openjdk:8-jdk-alpine
+MAINTAINER Alexander Kolosov <alexkp@inbox.ru>
+ADD target/spring-boot-docker-hr_administration.jar spring-boot-docker-hr_administration.jar
+EXPOSE 8080
+ENTRYPOINT ["java", "-jar", "spring-boot-docker-hr_administration.jar"]

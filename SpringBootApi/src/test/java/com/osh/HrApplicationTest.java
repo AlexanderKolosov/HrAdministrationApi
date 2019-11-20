@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class hrApplicationTest {
+public class HrApplicationTest {
     @Autowired
     private CompanyController companyController;
 

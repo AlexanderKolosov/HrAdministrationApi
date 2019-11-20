@@ -13,6 +13,6 @@ public interface EmployeeRepository extends CrudRepository<Employee, Integer> {
 
     List<Employee> findByDepartmentIdOrderById(int departmentId);
 
-    Optional<Employee> findByUserName(String userName);
+    Optional<Employee> findByLogin(String login);
 }
 

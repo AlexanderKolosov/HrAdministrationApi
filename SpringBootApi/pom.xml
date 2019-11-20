@@ -101,7 +101,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>com.osh.hrApplication</mainClass>
+                            <mainClass>com.osh.HrApplication</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

@@ -1,4 +1,4 @@
-# CompanyManagementApi
+# Human Resources Administartion API
 ### Dependencies
 Java Version : 1.8.0_201
 

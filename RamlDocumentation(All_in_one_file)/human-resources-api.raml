@@ -1,0 +1,1131 @@
+#%RAML 1.0
+title: human-resources-api
+version: v1
+protocols: [ HTTP ]
+baseUri: https://anypoint.mulesoft.com/mocking/api/v1/links/3b797e9a-3af5-42bb-910b-2a4256767175/api/{version} # 
+mediaType: application/json
+securitySchemes:
+  basic:
+    description: Each request must contain the headers necessary for basic authentication 
+    type: Basic Authentication
+    describedBy:
+      headers:
+        Authorization:
+          description: Used to send the Base64-encoded "username:password" credentials
+          type: string
+      responses:
+        401:
+          description: Unauthorized
+  
+/companies:
+  description: Collection of available companies
+  get:
+    securedBy: [basic]
+    description: Get list of companies
+    responses:
+      200:
+        body:
+          application/json:
+            example: |
+              [{"id" : 1, "name" : "First Company"},{"id" : 2, "name" : "Second Company"}]
+      404:
+        body:
+          application/json:
+            example: { "message" : "Resource not found" }
+  post:
+    securedBy: [basic: { secured: [ADMIN]}]
+    description: Create new company
+    body:
+      application/json: 
+        example: |
+          {"name" : "First Company"}
+    responses:
+      201:
+        body:
+          application/json:
+            example:
+              [{"id" : 1, "name" : "First Company"},{"id" : 2, "name" : "Second Company"}]
+      400:
+        body:
+          application/json:
+            example: { "message" : "Bad Request" }
+      403:
+        body:
+          application/json:
+            example: { "message" : "Forbidden" }
+      404:
+        body:
+          application/json:
+            example: { "message" : "Resource not found" }        
+  /{company_id}:
+    securedBy: [basic: { secured: [ADMIN]}]
+    description: Company entity
+    get:
+      description: Get the company with id={company_id}  
+      responses:
+        200:
+          body:
+            application/json:
+              example: |
+                {"id" : 1, "name" : "First Company", "creationDate": "2019-11-06"}
+        403:
+          body:
+            application/json:
+              example: { "message" : "Forbidden" }
+        404:
+          body:
+            application/json:
+              example: { "message" : "Resource not found" }
+    put:
+      description: Edit the company with id={company_id} 
+      body:
+        application/json:
+          example: |
+            {"name" : "First Company"} 
+      responses:
+        200:
+          body:
+            application/json:
+              example: |
+                {"id" : 1, "name" : "First Company", "creationDate": "2019-11-06"}
+        301:
+          body:
+            application/json:
+              example: { "message" : "Nothing was modified by the request" }
+        400:
+          body:
+            application/json:
+              example: { "message" : "Bad Request" }
+        403:
+          body:
+            application/json:
+              example: { "message" : "Forbidden" }
+        404:
+          body:
+            application/json:
+              example: { "message" : "Resource not found" } 
+    delete:
+      description: Delete the company with id={company_id}
+      responses:
+        204:
+          body:
+            example: { "message" : "The company deleted successfully"}
+        400:
+          body:
+            application/json:
+              example: { "message" : "Bad Request" }
+        403:
+          body:
+            application/json:
+              example: { "message" : "Forbidden" }
+        404:
+          body:
+            application/json:
+              example: { "message" : "Resource not found" }
+                    
+/departments:
+  description: Collection of available departments
+  get:
+    securedBy: [basic]
+    description: Get list of departments
+    responses:
+      200:
+        body:
+          application/json:
+            example: |
+              [{"id" : 1, "name" : "First Department", "companyId": 1},{"id" : 2, "name" : "Second Department", "companyId": 1}]
+      404:
+        body:
+          application/json:
+            example: { "message" : "Resource not found" }
+  post:
+    securedBy: [basic: { secured: [ADMIN]}]
+    description: Create new department
+    body:
+      application/json: 
+        example: |
+          {"name" : "Third Department", "companyId": 1}
+    responses:
+      201:
+        body:
+          application/json:
+            example: |
+              [{"id" : 1, "name" : "First Department", "companyId": 1},{"id" : 2, "name" : "Second Department", "companyId": 1},{"id" : 3, "name" : "Third Department", "companyId": 1}]
+      400:
+        body:
+          application/json:
+            example: { "message" : "Bad Request" }
+      403:
+        body:
+          application/json:
+            example: { "message" : "Forbidden" }
+      404:
+        body:
+          application/json:
+            example: { "message" : "Resource not found" }
+  /{department_id}:
+    securedBy: [basic: { secured: [ADMIN]}]
+    description: Department entity
+    get:
+      description: Get the department with id={department_id}  
+      responses:
+        200:
+          body:
+            application/json:
+              example: |
+                {"id" : 1, "name" : "First Department", "companyId": 1, "creationDate": "2019-11-06"}
+        403:
+          body:
+            application/json:
+              example: { "message" : "Forbidden" }
+        404:
+          body:
+            application/json:
+              example: { "message" : "Resource not found" }
+    put:
+      description: Edit the department with id={department_id} 
+      body:
+        application/json:
+          example: |
+            {"name" : "First Department"} 
+      responses:
+        200:
+          body:
+            application/json:
+              example: |
+                {"id" : 1, "name" : "First Company", "companyId": 1, "creationDate": "2019-11-06"}
+        301:
+          body:
+            application/json:
+              example: { "message" : "Nothing was modified by the request" }
+        400:
+          body:
+            application/json:
+              example: { "message" : "Bad Request" }
+        403:
+          body:
+            application/json:
+              example: { "message" : "Forbidden" }
+        404:
+          body:
+            application/json:
+              example: { "message" : "Resource not found" } 
+    delete:
+      description: Delete the company with id={company_id}
+      responses:
+        204:
+          body:
+            example: { "message" : "The department deleted successfully"}
+        400:
+          body:
+            application/json:
+              example: { "message" : "Bad Request" }
+        403:
+          body:
+            application/json:
+              example: { "message" : "Forbidden" }
+        404:
+          body:
+            application/json:
+              example: { "message" : "Resource not found" }
+  /companies/{company_id}:
+    description: Collection of available departments of the company with id={company_id}
+    get:
+      securedBy: [basic]
+      description: Get list of departments of the company with id={company_id}
+      responses:
+        200:
+          body:
+            application/json:
+              example: |
+                [{"id" : 1, "name" : "First Department", "companyId": 1},{"id" : 2, "name" : "Second Department", "companyId": 1}]
+        404:
+          body:
+            application/json:
+              example: { "message" : "Resource not found" }
+    post:
+      securedBy: [basic: { secured: [ADMIN]}]
+      description: Create new department of the company with id={company_id}
+      body:
+        application/json: 
+          example: |
+            {"name" : "Third Department"}
+      responses:
+        201:
+          body:
+            application/json:
+              example: |
+                [{"id" : 1, "name" : "First Department", "companyId": 1},{"id" : 2, "name" : "Second Department", "companyId": 1},{"id" : 3, "name" : "Third Department", "companyId": 1}]
+        400:
+          body:
+            application/json:
+              example: { "message" : "Bad Request" }
+        403:
+          body:
+            application/json:
+              example: { "message" : "Forbidden" }
+        404:
+          body:
+            application/json:
+              example: { "message" : "Resource not found" }
+
+/employees:
+  description: Collection of available employees
+  get:
+    securedBy: [basic]
+    description: Get list of employees
+    responses:
+      200:
+        body:
+          application/json:
+            example: |
+              [
+                { 
+                  "id" : 9, 
+                  "firstName" : "Alexander",
+                  "lastName" : "Kolosov",
+                  "companyId" : 2,
+                  "departmentId" : 1,
+                  "position" : "java developer"
+                },
+                { 
+                  "id" : 5, 
+                  "firstName" : "John",
+                  "lastName" : "Snow",
+                  "companyId" : 2,
+                  "departmentId" : 1,
+                  "position" : "warrior"
+                }
+              ]
+      404:
+        body:
+          application/json:
+            example: { "message" : "Resource not found" }
+  post:
+    securedBy: [basic: { secured: [ADMIN]}]
+    description: Create new  employee
+    body:
+      application/json: 
+        example: |
+          { 
+            "firstName" : "Guy",
+            "lastName" : "Ritchie",
+            "age" : 51,
+            "passportNumber" : "AA888888",
+            "phoneNumber" : "+37369888888",
+            "address" : "IT",
+            "companyId" : 2,
+            "departmentId" : 1,
+            "position" : "film producer", 
+            "login" : "guy", 
+            "password" : "ritchie", 
+            "roles" : "USER"
+          }
+    responses:
+      201:
+        body:
+          application/json:
+            example: |
+              [
+                { 
+                  "id" : 9, 
+                  "firstName" : "Alexander",
+                  "lastName" : "Kolosov",
+                  "companyId" : 2,
+                  "departmentId" : 1,
+                  "position" : "java developer"
+                },
+                { 
+                  "id" : 5, 
+                  "firstName" : "John",
+                  "lastName" : "Snow",
+                  "companyId" : 2,
+                  "departmentId" : 1,
+                  "position" : "warrior"
+                },
+                { 
+                  "id" : 10, 
+                  "firstName" : "Guy",
+                  "lastName" : "Ritchie",
+                  "companyId" : 2,
+                  "departmentId" : 1,
+                  "position" : "film producer"
+                }
+              ]
+      400:
+        body:
+          application/json:
+            example: { "message" : "Bad Request" }
+      403:
+        body:
+          application/json:
+            example: { "message" : "Forbidden" }
+      404:
+        body:
+          application/json:
+            example: { "message" : "Resource not found" }
+  /{employee_id}:
+    securedBy: [basic: { secured: [ADMIN]}]
+    description: Employee entity
+    get:
+      description: Get the employee with id={employee_id}  
+      responses:
+        200:
+          body:
+            application/json:
+              example: |
+                { 
+                  "id" : 10, 
+                  "firstName" : "Guy",
+                  "lastName" : "Ritchie",
+                  "age" : 51,
+                  "passportNumber" : "AA888888",
+                  "phoneNumber" : "+37369888888",
+                  "address" : "IT",
+                  "companyId" : 2,
+                  "departmentId" : 1,
+                  "position" : "film producer", 
+                  "login" : "guy", 
+                  "password" : "ritchie", 
+                  "roles" : "USER",
+                  "creationDate": "2019-11-06"
+                }
+        403:
+          body:
+            application/json:
+              example: { "message" : "Forbidden" }
+        404:
+          body:
+            application/json:
+              example: { "message" : "Resource not found" }
+    put:
+      description: Edit the employee with id={employee_id} 
+      body:
+        application/json:
+          example: |
+            { 
+              "firstName" : "Guy",
+              "lastName" : "Ritchie",
+              "age" : 51,
+              "passportNumber" : "AA888888",
+              "phoneNumber" : "+37369888888",
+              "address" : "IT",
+              "companyId" : 2,
+              "departmentId" : 1,
+              "position" : "film producer", 
+              "login" : "guy", 
+              "password" : "ritchie", 
+              "roles" : "USER"
+            }
+      responses:
+        200:
+          body:
+            application/json:
+              example: |
+                { 
+                  "id" : 10, 
+                  "firstName" : "Guy",
+                  "lastName" : "Ritchie",
+                  "age" : 51,
+                  "passportNumber" : "AA888888",
+                  "phoneNumber" : "+37369888888",
+                  "address" : "IT",
+                  "companyId" : 2,
+                  "departmentId" : 1,
+                  "position" : "film producer", 
+                  "login" : "guy", 
+                  "password" : "ritchie", 
+                  "roles" : "USER",
+                  "creationDate": "2019-11-06"
+                }
+        301:
+          body:
+            application/json:
+              example: { "message" : "Nothing was modified by the request" }
+        400:
+          body:
+            application/json:
+              example: { "message" : "Bad Request" }
+        403:
+          body:
+            application/json:
+              example: { "message" : "Forbidden" }
+        404:
+          body:
+            application/json:
+              example: { "message" : "Resource not found" } 
+    delete:
+      description: Delete the employee with id={employee_id}
+      responses:
+        204:
+          body:
+            example: { "message" : "The employee deleted successfully"}
+        400:
+          body:
+            application/json:
+              example: { "message" : "Bad Request" }
+        403:
+          body:
+            application/json:
+              example: { "message" : "Forbidden" }
+        404:
+          body:
+            application/json:
+              example: { "message" : "Resource not found" }
+  /companies/{company_id}:
+    description: Collection of available employees of the company with id={company_id}
+    get:
+      securedBy: [basic]
+      description: Get list of employees of the company with id={company_id}
+      responses:
+        200:
+          body:
+            application/json:
+              example: |
+                [
+                  { 
+                    "id" : 9, 
+                    "firstName" : "Alexander",
+                    "lastName" : "Kolosov",
+                    "companyId" : 2,
+                    "departmentId" : 1,
+                    "position" : "java developer"
+                  },
+                  { 
+                    "id" : 5, 
+                    "firstName" : "John",
+                    "lastName" : "Snow",
+                    "companyId" : 2,
+                    "departmentId" : 1,
+                    "position" : "warrior"
+                  }
+                ]
+        404:
+          body:
+            application/json:
+              example: { "message" : "Resource not found" }
+    post:
+      securedBy: [basic: { secured: [ADMIN]}]
+      description: Create new employee of the company with id={company_id}
+      body:
+        application/json: 
+          example: |
+            { 
+              "firstName" : "Guy",
+              "lastName" : "Ritchie",
+              "age" : 51,
+              "passportNumber" : "AA888888",
+              "phoneNumber" : "+37369888888",
+              "address" : "IT",
+              "departmentId" : 1,
+              "position" : "film producer", 
+              "login" : "guy", 
+              "password" : "ritchie", 
+              "roles" : "USER"
+            }
+      responses:
+        201:
+          body:
+            application/json:
+              example: |
+                [
+                  { 
+                    "id" : 9, 
+                    "firstName" : "Alexander",
+                    "lastName" : "Kolosov",
+                    "companyId" : 2,
+                    "departmentId" : 1,
+                    "position" : "java developer"
+                  },
+                  { 
+                    "id" : 5, 
+                    "firstName" : "John",
+                    "lastName" : "Snow",
+                    "companyId" : 2,
+                    "departmentId" : 1,
+                    "position" : "warrior"
+                  },
+                  { 
+                    "id" : 10, 
+                    "firstName" : "Guy",
+                    "lastName" : "Ritchie",
+                    "companyId" : 2,
+                    "departmentId" : 1,
+                    "position" : "film producer"
+                  }
+                ]
+        400:
+          body:
+            application/json:
+              example: { "message" : "Bad Request" }
+        403:
+          body:
+            application/json:
+              example: { "message" : "Forbidden" }
+        404:
+          body:
+            application/json:
+              example: { "message" : "Resource not found" }
+  /departments/{department_id}:
+    description: Collection of available employees of the department with id={department_id}
+    get:
+      securedBy: [basic]
+      description: Get list of employees of the department with id={department_id}
+      responses:
+        200:
+          body:
+            application/json:
+              example: |
+                [
+                  { 
+                    "id" : 9, 
+                    "firstName" : "Alexander",
+                    "lastName" : "Kolosov",
+                    "companyId" : 2,
+                    "departmentId" : 1,
+                    "position" : "java developer"
+                  },
+                  { 
+                    "id" : 5, 
+                    "firstName" : "John",
+                    "lastName" : "Snow",
+                    "companyId" : 2,
+                    "departmentId" : 1,
+                    "position" : "warrior"
+                  }
+                ]
+        404:
+          body:
+            application/json:
+              example: { "message" : "Resource not found" }
+    post:
+      securedBy: [basic: { secured: [ADMIN]}]
+      description: Create new employee of the department with id={department_id}
+      body:
+        application/json: 
+          example: |
+            { 
+              "firstName" : "Guy",
+              "lastName" : "Ritchie",
+              "age" : 51,
+              "passportNumber" : "AA888888",
+              "phoneNumber" : "+37369888888",
+              "address" : "IT",
+              "companyId" : 2,
+              "position" : "film producer", 
+              "login" : "guy", 
+              "password" : "ritchie", 
+              "roles" : "USER"
+            }
+      responses:
+        201:
+          body:
+            application/json:
+              example: |
+                [
+                  { 
+                    "id" : 9, 
+                    "firstName" : "Alexander",
+                    "lastName" : "Kolosov",
+                    "companyId" : 2,
+                    "departmentId" : 1,
+                    "position" : "java developer"
+                  },
+                  { 
+                    "id" : 5, 
+                    "firstName" : "John",
+                    "lastName" : "Snow",
+                    "companyId" : 2,
+                    "departmentId" : 1,
+                    "position" : "warrior"
+                  },
+                  { 
+                    "id" : 10, 
+                    "firstName" : "Guy",
+                    "lastName" : "Ritchie",
+                    "companyId" : 2,
+                    "departmentId" : 1,
+                    "position" : "film producer"
+                  }
+                ]
+        400:
+          body:
+            application/json:
+              example: { "message" : "Bad Request" }
+        403:
+          body:
+            application/json:
+              example: { "message" : "Forbidden" }
+        404:
+          body:
+            application/json:
+              example: { "message" : "Resource not found" }
+
+/vacations:
+  description: Collection of available vacations
+  get:
+    securedBy: [basic]
+    description: Get list of vacations
+    responses:
+      200:
+        body:
+          application/json:
+            example: |
+              [
+                { 
+                  "id" : 1, 
+                  "employeeId" : 9,
+                  "companyId" : 2,
+                  "departmentId" : 3,
+                  "startDate" : "2020-05-23",
+                  "periodOfDays" : 25,
+                  "status": "In process"
+                },
+                {
+                  "id" : 1, 
+                  "employeeId" : 10,
+                  "companyId" : 2,
+                  "departmentId" : 3,
+                  "startDate" : "2020-06-23",
+                  "periodOfDays" : 15,
+                  "status": "In process"
+                }
+              ]
+      404:
+        body:
+          application/json:
+            example: { "message" : "Resource not found" }
+  post:
+    securedBy: [basic: { secured: [ADMIN]}]
+    description: Create new vacation
+    body:
+      application/json: 
+        example: |
+          { 
+            "id" : 11, 
+            "employeeId" : 5,
+            "companyId" : 2,
+            "departmentId" : 3,
+            "startDate" : "2020-09-23",
+            "periodOfDays" : 20,
+            "status": "In process"
+          }
+    responses:
+      201:
+        body:
+          application/json:
+            example:
+              [
+                { 
+                  "id" : 1, 
+                  "employeeId" : 9,
+                  "companyId" : 2,
+                  "departmentId" : 3,
+                  "startDate" : "2020-05-23",
+                  "periodOfDays" : 25,
+                  "status": "In process"
+                },
+                {
+                  "id" : 1, 
+                  "employeeId" : 10,
+                  "companyId" : 2,
+                  "departmentId" : 3,
+                  "startDate" : "2020-06-23",
+                  "periodOfDays" : 15,
+                  "status": "In process"
+                },
+                { 
+                  "id" : 11, 
+                  "employeeId" : 5,
+                  "companyId" : 2,
+                  "departmentId" : 3,
+                  "startDate" : "2020-09-23",
+                  "periodOfDays" : 20,
+                  "status": "In process"
+                }
+              ]
+      400:
+        body:
+          application/json:
+            example: { "message" : "Bad Request" }
+      403:
+        body:
+          application/json:
+            example: { "message" : "Forbidden" }
+      404:
+        body:
+          application/json:
+            example: { "message" : "Resource not found" }
+  /{vacation_id}:
+    securedBy: [basic: { secured: [ADMIN]}]
+    description: Vacation entity
+    get:
+      description: Get the vacation with id={vacation_id}  
+      responses:
+        200:
+          body:
+            application/json:
+              example: |
+                { 
+                  "id" : 1, 
+                  "employeeId" : 9,
+                  "companyId" : 2,
+                  "departmentId" : 3,
+                  "startDate" : "2020-05-23",
+                  "periodOfDays" : 25,
+                  "status": "In process",
+                  "creationDate": "2019-11-06"
+                }
+        403:
+          body:
+            application/json:
+              example: { "message" : "Forbidden" }
+        404:
+          body:
+            application/json:
+              example: { "message" : "Resource not found" }
+    put:
+      description: Edit the vacation with id={vacation_id} 
+      body:
+        application/json:
+          example: |
+            { 
+              "id" : 1, 
+              "employeeId" : 9,
+              "companyId" : 2,
+              "departmentId" : 3,
+              "startDate" : "2020-05-23",
+              "periodOfDays" : 25,
+              "status": "Approved"
+            } 
+      responses:
+        200:
+          body:
+            application/json:
+              example: |
+                { 
+                  "id" : 1, 
+                  "employeeId" : 9,
+                  "companyId" : 2,
+                  "departmentId" : 3,
+                  "startDate" : "2020-05-23",
+                  "periodOfDays" : 25,
+                  "status": "Approved",
+                  "creationDate": "2019-11-06"
+                }
+        301:
+          body:
+            application/json:
+              example: { "message" : "Nothing was modified by the request" }
+        400:
+          body:
+            application/json:
+              example: { "message" : "Bad Request" }
+        403:
+          body:
+            application/json:
+              example: { "message" : "Forbidden" }
+        404:
+          body:
+            application/json:
+              example: { "message" : "Resource not found" } 
+    delete:
+      description: Delete the vacation with id={vacation_id}
+      responses:
+        204:
+          body:
+            example: { "message" : "The vacation deleted successfully"}
+        400:
+          body:
+            application/json:
+              example: { "message" : "Bad Request" }
+        403:
+          body:
+            application/json:
+              example: { "message" : "Forbidden" }
+        404:
+          body:
+            application/json:
+              example: { "message" : "Resource not found" }
+  /companies/{company_id}:
+    description: Collection of available vacations of company with id={company_id}
+    get:
+      securedBy: [basic]
+      description: Get list of vacations of company with id={company_id}
+      responses:
+        200:
+          body:
+            application/json:
+              example: |
+                [
+                  { 
+                    "id" : 1, 
+                    "employeeId" : 9,
+                    "companyId" : 2,
+                    "departmentId" : 3,
+                    "startDate" : "2020-05-23",
+                    "periodOfDays" : 25,
+                    "status": "In process"
+                  },
+                  {
+                    "id" : 1, 
+                    "employeeId" : 10,
+                    "companyId" : 2,
+                    "departmentId" : 3,
+                    "startDate" : "2020-06-23",
+                    "periodOfDays" : 15,
+                    "status": "In process"
+                  }
+                ]
+        404:
+          body:
+            application/json:
+              example: { "message" : "Resource not found" }
+    post:
+      securedBy: [basic: { secured: [ADMIN]}]
+      description: Create new vacation of company with id={company_id}
+      body:
+        application/json: 
+          example: |
+            { 
+              "id" : 11, 
+              "employeeId" : 5,
+              "departmentId" : 3,
+              "startDate" : "2020-09-23",
+              "periodOfDays" : 20,
+              "status": "In process"
+            }
+      responses:
+        201:
+          body:
+            application/json:
+              example:
+                [
+                  { 
+                    "id" : 1, 
+                    "employeeId" : 9,
+                    "companyId" : 2,
+                    "departmentId" : 3,
+                    "startDate" : "2020-05-23",
+                    "periodOfDays" : 25,
+                    "status": "In process"
+                  },
+                  {
+                    "id" : 1, 
+                    "employeeId" : 10,
+                    "companyId" : 2,
+                    "departmentId" : 3,
+                    "startDate" : "2020-06-23",
+                    "periodOfDays" : 15,
+                    "status": "In process"
+                  },
+                  { 
+                    "id" : 11, 
+                    "employeeId" : 5,
+                    "companyId" : 2,
+                    "departmentId" : 3,
+                    "startDate" : "2020-09-23",
+                    "periodOfDays" : 20,
+                    "status": "In process"
+                  }
+                ]
+        400:
+          body:
+            application/json:
+              example: { "message" : "Bad Request" }
+        403:
+          body:
+            application/json:
+              example: { "message" : "Forbidden" }
+        404:
+          body:
+            application/json:
+              example: { "message" : "Resource not found" }
+  /departments/{department_id}:
+    description: Collection of available vacations of department with id={department_id}
+    get:
+      securedBy: [basic]
+      description: Get list of vacations of department with id={department_id}
+      responses:
+        200:
+          body:
+            application/json:
+              example: |
+                [
+                  { 
+                    "id" : 1, 
+                    "employeeId" : 9,
+                    "companyId" : 2,
+                    "departmentId" : 3,
+                    "startDate" : "2020-05-23",
+                    "periodOfDays" : 25,
+                    "status": "In process"
+                  },
+                  {
+                    "id" : 1, 
+                    "employeeId" : 10,
+                    "companyId" : 2,
+                    "departmentId" : 3,
+                    "startDate" : "2020-06-23",
+                    "periodOfDays" : 15,
+                    "status": "In process"
+                  }
+                ]
+        404:
+          body:
+            application/json:
+              example: { "message" : "Resource not found" }
+    post:
+      securedBy: [basic: { secured: [ADMIN]}]
+      description: Create new vacation of department with id={department_id}
+      body:
+        application/json: 
+          example: |
+            { 
+              "id" : 11, 
+              "employeeId" : 5,
+              "departmentId" : 3,
+              "startDate" : "2020-09-23",
+              "periodOfDays" : 20,
+              "status": "In process"
+            }
+      responses:
+        201:
+          body:
+            application/json:
+              example:
+                [
+                  { 
+                    "id" : 1, 
+                    "employeeId" : 9,
+                    "companyId" : 2,
+                    "departmentId" : 3,
+                    "startDate" : "2020-05-23",
+                    "periodOfDays" : 25,
+                    "status": "In process"
+                  },
+                  {
+                    "id" : 1, 
+                    "employeeId" : 10,
+                    "companyId" : 2,
+                    "departmentId" : 3,
+                    "startDate" : "2020-06-23",
+                    "periodOfDays" : 15,
+                    "status": "In process"
+                  },
+                  { 
+                    "id" : 11, 
+                    "employeeId" : 5,
+                    "companyId" : 2,
+                    "departmentId" : 3,
+                    "startDate" : "2020-09-23",
+                    "periodOfDays" : 20,
+                    "status": "In process"
+                  }
+                ]
+        400:
+          body:
+            application/json:
+              example: { "message" : "Bad Request" }
+        403:
+          body:
+            application/json:
+              example: { "message" : "Forbidden" }
+        404:
+          body:
+            application/json:
+              example: { "message" : "Resource not found" }
+  /employees/{employee_id}:
+    description: Collection of available vacations of employee with id={employee_id}
+    get:
+      securedBy: [basic]
+      description: Get list of vacations of employee with id={employee_id}
+      responses:
+        200:
+          body:
+            application/json:
+              example: |
+                [
+                  { 
+                    "id" : 1, 
+                    "employeeId" : 9,
+                    "companyId" : 2,
+                    "departmentId" : 3,
+                    "startDate" : "2020-05-23",
+                    "periodOfDays" : 25,
+                    "status": "In process"
+                  },
+                  {
+                    "id" : 1, 
+                    "employeeId" : 10,
+                    "companyId" : 2,
+                    "departmentId" : 3,
+                    "startDate" : "2020-06-23",
+                    "periodOfDays" : 15,
+                    "status": "In process"
+                  }
+                ]
+        404:
+          body:
+            application/json:
+              example: { "message" : "Resource not found" }
+    post:
+      securedBy: [basic: { secured: [ADMIN]}]
+      description: Create new vacation of employee with id={employee_id}
+      body:
+        application/json: 
+          example: |
+            { 
+              "id" : 11, 
+              "employeeId" : 5,
+              "departmentId" : 3,
+              "startDate" : "2020-09-23",
+              "periodOfDays" : 20,
+              "status": "In process"
+            }
+      responses:
+        201:
+          body:
+            application/json:
+              example:
+                [
+                  { 
+                    "id" : 1, 
+                    "employeeId" : 9,
+                    "companyId" : 2,
+                    "departmentId" : 3,
+                    "startDate" : "2020-05-23",
+                    "periodOfDays" : 25,
+                    "status": "In process"
+                  },
+                  {
+                    "id" : 1, 
+                    "employeeId" : 10,
+                    "companyId" : 2,
+                    "departmentId" : 3,
+                    "startDate" : "2020-06-23",
+                    "periodOfDays" : 15,
+                    "status": "In process"
+                  },
+                  { 
+                    "id" : 11, 
+                    "employeeId" : 5,
+                    "companyId" : 2,
+                    "departmentId" : 3,
+                    "startDate" : "2020-09-23",
+                    "periodOfDays" : 20,
+                    "status": "In process"
+                  }
+                ]
+        400:
+          body:
+            application/json:
+              example: { "message" : "Bad Request" }
+        403:
+          body:
+            application/json:
+              example: { "message" : "Forbidden" }
+        404:
+          body:
+            application/json:
+              example: { "message" : "Resource not found" }

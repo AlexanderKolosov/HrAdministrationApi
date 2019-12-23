@@ -43,8 +43,7 @@ securitySchemes:
       201:
         body:
           application/json:
-            example:
-              [{"id" : 1, "name" : "First Company"},{"id" : 2, "name" : "Second Company"}]
+            example: { "message" : "The company 'company_name' was created successfully"}
       400:
         body:
           application/json:
@@ -86,8 +85,7 @@ securitySchemes:
         200:
           body:
             application/json:
-              example: |
-                {"id" : 1, "name" : "First Company", "creationDate": "2019-11-06"}
+              example: { "message" : "The company 'company_name' was modified successfully"}
         301:
           body:
             application/json:
@@ -109,7 +107,7 @@ securitySchemes:
       responses:
         204:
           body:
-            example: { "message" : "The company deleted successfully"}
+            example: { "message" : "The company 'company_name' was deleted successfully"}
         400:
           body:
             application/json:
@@ -149,8 +147,7 @@ securitySchemes:
       201:
         body:
           application/json:
-            example: |
-              [{"id" : 1, "name" : "First Department", "companyId": 1},{"id" : 2, "name" : "Second Department", "companyId": 1},{"id" : 3, "name" : "Third Department", "companyId": 1}]
+            example: { "message" : "The department 'department_name' was created successfully"}
       400:
         body:
           application/json:
@@ -192,8 +189,7 @@ securitySchemes:
         200:
           body:
             application/json:
-              example: |
-                {"id" : 1, "name" : "First Company", "companyId": 1, "creationDate": "2019-11-06"}
+              example: { "message" : "The department 'department_name' was modified successfully"}
         301:
           body:
             application/json:
@@ -215,7 +211,8 @@ securitySchemes:
       responses:
         204:
           body:
-            example: { "message" : "The department deleted successfully"}
+            application/json:
+              example: { "message" : "The department 'department_name' was deleted successfully"}
         400:
           body:
             application/json:
@@ -254,8 +251,7 @@ securitySchemes:
         201:
           body:
             application/json:
-              example: |
-                [{"id" : 1, "name" : "First Department", "companyId": 1},{"id" : 2, "name" : "Second Department", "companyId": 1},{"id" : 3, "name" : "Third Department", "companyId": 1}]
+              example: { "message" : "The department 'department_name' was created successfully"}
         400:
           body:
             application/json:
@@ -325,33 +321,7 @@ securitySchemes:
       201:
         body:
           application/json:
-            example: |
-              [
-                { 
-                  "id" : 9, 
-                  "firstName" : "Alexander",
-                  "lastName" : "Kolosov",
-                  "companyId" : 2,
-                  "departmentId" : 1,
-                  "position" : "java developer"
-                },
-                { 
-                  "id" : 5, 
-                  "firstName" : "John",
-                  "lastName" : "Snow",
-                  "companyId" : 2,
-                  "departmentId" : 1,
-                  "position" : "warrior"
-                },
-                { 
-                  "id" : 10, 
-                  "firstName" : "Guy",
-                  "lastName" : "Ritchie",
-                  "companyId" : 2,
-                  "departmentId" : 1,
-                  "position" : "film producer"
-                }
-              ]
+            example: { "message" : "The employee 'employee_name' was created successfully"}
       400:
         body:
           application/json:
@@ -421,23 +391,7 @@ securitySchemes:
         200:
           body:
             application/json:
-              example: |
-                { 
-                  "id" : 10, 
-                  "firstName" : "Guy",
-                  "lastName" : "Ritchie",
-                  "age" : 51,
-                  "passportNumber" : "AA888888",
-                  "phoneNumber" : "+37369888888",
-                  "address" : "IT",
-                  "companyId" : 2,
-                  "departmentId" : 1,
-                  "position" : "film producer", 
-                  "login" : "guy", 
-                  "password" : "ritchie", 
-                  "roles" : "USER",
-                  "creationDate": "2019-11-06"
-                }
+              example: { "message" : "The employee 'employee_name' was modified successfully"}
         301:
           body:
             application/json:
@@ -459,7 +413,8 @@ securitySchemes:
       responses:
         204:
           body:
-            example: { "message" : "The employee deleted successfully"}
+            application/json:
+              example: { "message" : "The employee 'employee_name' was deleted successfully"}
         400:
           body:
             application/json:
@@ -527,33 +482,7 @@ securitySchemes:
         201:
           body:
             application/json:
-              example: |
-                [
-                  { 
-                    "id" : 9, 
-                    "firstName" : "Alexander",
-                    "lastName" : "Kolosov",
-                    "companyId" : 2,
-                    "departmentId" : 1,
-                    "position" : "java developer"
-                  },
-                  { 
-                    "id" : 5, 
-                    "firstName" : "John",
-                    "lastName" : "Snow",
-                    "companyId" : 2,
-                    "departmentId" : 1,
-                    "position" : "warrior"
-                  },
-                  { 
-                    "id" : 10, 
-                    "firstName" : "Guy",
-                    "lastName" : "Ritchie",
-                    "companyId" : 2,
-                    "departmentId" : 1,
-                    "position" : "film producer"
-                  }
-                ]
+              example: { "message" : "The employee 'employee_name' was created successfully"}
         400:
           body:
             application/json:
@@ -621,33 +550,7 @@ securitySchemes:
         201:
           body:
             application/json:
-              example: |
-                [
-                  { 
-                    "id" : 9, 
-                    "firstName" : "Alexander",
-                    "lastName" : "Kolosov",
-                    "companyId" : 2,
-                    "departmentId" : 1,
-                    "position" : "java developer"
-                  },
-                  { 
-                    "id" : 5, 
-                    "firstName" : "John",
-                    "lastName" : "Snow",
-                    "companyId" : 2,
-                    "departmentId" : 1,
-                    "position" : "warrior"
-                  },
-                  { 
-                    "id" : 10, 
-                    "firstName" : "Guy",
-                    "lastName" : "Ritchie",
-                    "companyId" : 2,
-                    "departmentId" : 1,
-                    "position" : "film producer"
-                  }
-                ]
+              example: { "message" : "The employee 'employee_name' was created successfully"}
         400:
           body:
             application/json:
@@ -714,36 +617,7 @@ securitySchemes:
       201:
         body:
           application/json:
-            example:
-              [
-                { 
-                  "id" : 1, 
-                  "employeeId" : 9,
-                  "companyId" : 2,
-                  "departmentId" : 3,
-                  "startDate" : "2020-05-23",
-                  "periodOfDays" : 25,
-                  "status": "In process"
-                },
-                {
-                  "id" : 1, 
-                  "employeeId" : 10,
-                  "companyId" : 2,
-                  "departmentId" : 3,
-                  "startDate" : "2020-06-23",
-                  "periodOfDays" : 15,
-                  "status": "In process"
-                },
-                { 
-                  "id" : 11, 
-                  "employeeId" : 5,
-                  "companyId" : 2,
-                  "departmentId" : 3,
-                  "startDate" : "2020-09-23",
-                  "periodOfDays" : 20,
-                  "status": "In process"
-                }
-              ]
+            example: { "message" : "The vacation was created successfully" }
       400:
         body:
           application/json:
@@ -802,17 +676,7 @@ securitySchemes:
         200:
           body:
             application/json:
-              example: |
-                { 
-                  "id" : 1, 
-                  "employeeId" : 9,
-                  "companyId" : 2,
-                  "departmentId" : 3,
-                  "startDate" : "2020-05-23",
-                  "periodOfDays" : 25,
-                  "status": "Approved",
-                  "creationDate": "2019-11-06"
-                }
+              example: { "message" : "The vacation was modified successfully" }
         301:
           body:
             application/json:
@@ -834,7 +698,8 @@ securitySchemes:
       responses:
         204:
           body:
-            example: { "message" : "The vacation deleted successfully"}
+            application/json:
+              example: { "message" : "The vacation was deleted successfully" }
         400:
           body:
             application/json:
@@ -899,36 +764,7 @@ securitySchemes:
         201:
           body:
             application/json:
-              example:
-                [
-                  { 
-                    "id" : 1, 
-                    "employeeId" : 9,
-                    "companyId" : 2,
-                    "departmentId" : 3,
-                    "startDate" : "2020-05-23",
-                    "periodOfDays" : 25,
-                    "status": "In process"
-                  },
-                  {
-                    "id" : 1, 
-                    "employeeId" : 10,
-                    "companyId" : 2,
-                    "departmentId" : 3,
-                    "startDate" : "2020-06-23",
-                    "periodOfDays" : 15,
-                    "status": "In process"
-                  },
-                  { 
-                    "id" : 11, 
-                    "employeeId" : 5,
-                    "companyId" : 2,
-                    "departmentId" : 3,
-                    "startDate" : "2020-09-23",
-                    "periodOfDays" : 20,
-                    "status": "In process"
-                  }
-                ]
+              example: { "message" : "The vacation was created successfully" }
         400:
           body:
             application/json:
@@ -993,36 +829,7 @@ securitySchemes:
         201:
           body:
             application/json:
-              example:
-                [
-                  { 
-                    "id" : 1, 
-                    "employeeId" : 9,
-                    "companyId" : 2,
-                    "departmentId" : 3,
-                    "startDate" : "2020-05-23",
-                    "periodOfDays" : 25,
-                    "status": "In process"
-                  },
-                  {
-                    "id" : 1, 
-                    "employeeId" : 10,
-                    "companyId" : 2,
-                    "departmentId" : 3,
-                    "startDate" : "2020-06-23",
-                    "periodOfDays" : 15,
-                    "status": "In process"
-                  },
-                  { 
-                    "id" : 11, 
-                    "employeeId" : 5,
-                    "companyId" : 2,
-                    "departmentId" : 3,
-                    "startDate" : "2020-09-23",
-                    "periodOfDays" : 20,
-                    "status": "In process"
-                  }
-                ]
+              example: { "message" : "The vacation was created successfully" }
         400:
           body:
             application/json:
@@ -1087,36 +894,7 @@ securitySchemes:
         201:
           body:
             application/json:
-              example:
-                [
-                  { 
-                    "id" : 1, 
-                    "employeeId" : 9,
-                    "companyId" : 2,
-                    "departmentId" : 3,
-                    "startDate" : "2020-05-23",
-                    "periodOfDays" : 25,
-                    "status": "In process"
-                  },
-                  {
-                    "id" : 1, 
-                    "employeeId" : 10,
-                    "companyId" : 2,
-                    "departmentId" : 3,
-                    "startDate" : "2020-06-23",
-                    "periodOfDays" : 15,
-                    "status": "In process"
-                  },
-                  { 
-                    "id" : 11, 
-                    "employeeId" : 5,
-                    "companyId" : 2,
-                    "departmentId" : 3,
-                    "startDate" : "2020-09-23",
-                    "periodOfDays" : 20,
-                    "status": "In process"
-                  }
-                ]
+              example: { "message" : "The vacation was created successfully" }
         400:
           body:
             application/json:
